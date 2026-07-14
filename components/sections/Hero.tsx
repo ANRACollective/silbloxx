@@ -59,39 +59,36 @@ export function Hero() {
         />
       </Container>
 
-      {/* Desktop: overlapping collage */}
-      <Container className="relative mt-8 hidden lg:block">
-        <div className="relative h-[760px] w-full">
-          {/* big centre plate */}
-          <BracketImage
-            src="/images/hero-welding-line.jpg"
-            alt="Overhead view of an automated welding line assembling a silo panel"
-            corners={[]}
-            className="absolute left-[22%] top-[70px] h-[420px] w-[48%]"
-            placeholderLabel="Automated welding line"
-            priority
-          />
-          {/* worker, upper-right, with solid block accent */}
-          <div className="absolute right-0 top-0 h-[320px] w-[20%]">
-            <div className="absolute -right-4 -top-5 h-24 w-24 bg-ink" aria-hidden />
+      {/* Desktop: structured featured strip */}
+      <Container className="mt-12 hidden lg:block">
+        <Reveal>
+          <div className="grid h-[480px] grid-cols-12 gap-4">
+            <BracketImage
+              src="/images/hero-welding-line.jpg"
+              alt="Overhead view of an automated welding line assembling a silo panel"
+              corners={["bl"]}
+              bracket={60}
+              className="col-span-6 h-full"
+              placeholderLabel="Automated welding line"
+              priority
+            />
             <BracketImage
               src="/images/hero-worker.jpg"
               alt="Silbloxx operator guiding a steel panel with a lifting chain"
               corners={[]}
-              className="relative h-full w-full"
+              className="col-span-3 h-full"
               placeholderLabel="Operator on the floor"
             />
+            <BracketImage
+              src="/images/hero-robot.jpg"
+              alt="Robotic welding cell throwing blue sparks on the Silbloxx line"
+              corners={["tr"]}
+              bracket={60}
+              className="col-span-3 h-full"
+              placeholderLabel="Robotic welding — sparks"
+            />
           </div>
-          {/* robot, lower-left, with L-bracket */}
-          <BracketImage
-            src="/images/hero-robot.jpg"
-            alt="Robotic welding cell throwing blue sparks on the Silbloxx line"
-            corners={["bl"]}
-            bracket={64}
-            className="absolute bottom-0 left-0 h-[300px] w-[22%]"
-            placeholderLabel="Robotic welding — sparks"
-          />
-        </div>
+        </Reveal>
       </Container>
 
       <span id="about" className="block h-0" />

@@ -30,13 +30,13 @@ export function Wordmark({
       <span
         aria-hidden
         className={cn(
-          "mx-[0.05em] inline-block shrink-0 rounded-full border-current align-middle",
+          "mx-[0.06em] inline-block shrink-0 rounded-[0.13em] border-current align-middle",
           stretch && "min-w-[1.4em] flex-1",
         )}
         style={{
           borderWidth: thickness,
           height: "0.72em",
-          width: stretch ? undefined : "0.9em",
+          width: stretch ? undefined : "0.8em",
         }}
       />
       <span className="whitespace-pre">XX</span>
