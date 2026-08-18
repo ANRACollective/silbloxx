@@ -18,10 +18,14 @@ function StatGrid() {
     <RevealGroup as="div" className="mt-10 grid grid-cols-2 gap-x-8 gap-y-9">
       {STATS.map((s) => (
         <motion.div key={s.label} variants={revealItem}>
+          {/* Brand rule: yellow is a *surface*, never a text colour on white
+              (yellow-on-white measures 1.36:1). The accent stat is therefore
+              black type on a yellow block. */}
           <div
             className={cn(
-              "font-display text-[34px] leading-none tracking-[-0.02em] lg:text-[40px]",
-              s.accent ? "text-yellow" : "text-ink",
+              "font-display text-[34px] leading-none tracking-[-0.02em] text-ink lg:text-[40px]",
+              s.accent &&
+                "inline-block bg-yellow px-2.5 py-1.5 -ml-2.5 -mt-1.5",
             )}
           >
             {s.value}
@@ -40,12 +44,13 @@ export function About() {
         <Reveal>
           <p className="eyebrow text-ink">About Us</p>
           <h2 className="h2 mt-4 max-w-[520px] text-ink">
-            From Belgium to the world, now to Asia.
+            Decades of experience. A new chapter in Vietnam.
           </h2>
           <p className="mt-6 max-w-[500px] text-[17px] leading-[1.55] text-muted">
             For decades, Silbloxx has supplied modular silo systems to projects
             across Europe, Asia, and Africa. Our new facility in Ho Chi Minh City
-            brings production closer to the markets that need it most.
+            adds to that footprint, bringing production closer to our customers
+            across Asia and the wider region.
           </p>
           <StatGrid />
         </Reveal>

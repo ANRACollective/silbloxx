@@ -26,6 +26,34 @@ const EMPTY: Fields = {
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
+/** Text shown under an invalid field. Colour alone can't carry the error. */
+const MESSAGES: Record<string, string> = {
+  firstName: "Enter your first name.",
+  lastName: "Enter your last name.",
+  email: "Enter a valid email address.",
+  phone: "Enter a phone number we can reach you on.",
+  file: "Attach your CV as a PDF.",
+  consent: "Please accept the privacy statement to continue.",
+};
+
+/** Inline error message. Text, not just an orange border. */
+function FieldError({
+  show,
+  field,
+  errId,
+}: {
+  show?: boolean;
+  field: string;
+  errId: string;
+}) {
+  if (!show) return null;
+  return (
+    <p id={errId} className="mt-1.5 text-[13px] leading-[1.4] text-ink">
+      {MESSAGES[field]}
+    </p>
+  );
+}
+
 /**
  * Inline apply form. Front-end only (per project scope): validates required
  * fields + CV, then shows a success state and offers the careers inbox as a
@@ -60,8 +88,17 @@ export function ApplyForm({
     if (!file) errs.file = true;
     if (!consent) errs.consent = true;
     setErrors(errs);
-    if (Object.keys(errs).length === 0) setSent(true);
+    if (Object.keys(errs).length === 0) {
+      setSent(true);
+      return;
+    }
+    // Move focus to the first problem so keyboard and screen-reader users
+    // land on it rather than being left at the submit button.
+    const first = Object.keys(errs)[0];
+    document.getElementById(id(first === "file" ? "cvTrigger" : first))?.focus();
   };
+
+  const errorCount = Object.keys(errors).length;
 
   return (
     <div className="border border-ink bg-paper p-6 lg:p-8">
@@ -96,6 +133,15 @@ export function ApplyForm({
             initial={false}
             className="space-y-5"
           >
+            <div
+              aria-live="polite"
+              className={errorCount ? "border border-ink bg-yellow px-4 py-3 text-[14px] leading-[1.45] text-ink" : "sr-only"}
+            >
+              {errorCount
+                ? `Your application couldn't be sent — ${errorCount} ${errorCount === 1 ? "field needs" : "fields need"} attention below.`
+                : ""}
+            </div>
+
             <div>
               <h3 className="font-display text-[20px] leading-none tracking-[-0.01em] text-ink">
                 Interested in this opportunity?
@@ -116,8 +162,10 @@ export function ApplyForm({
                   value={values.firstName}
                   onChange={set("firstName")}
                   aria-invalid={!!errors.firstName}
+                  aria-describedby={errors.firstName ? id("firstName-err") : undefined}
                   autoComplete="given-name"
                 />
+                <FieldError show={errors.firstName} field="firstName" errId={id("firstName-err")} />
               </div>
               <div>
                 <Label htmlFor={id("lastName")} required>
@@ -128,8 +176,10 @@ export function ApplyForm({
                   value={values.lastName}
                   onChange={set("lastName")}
                   aria-invalid={!!errors.lastName}
+                  aria-describedby={errors.lastName ? id("lastName-err") : undefined}
                   autoComplete="family-name"
                 />
+                <FieldError show={errors.lastName} field="lastName" errId={id("lastName-err")} />
               </div>
               <div>
                 <Label htmlFor={id("email")} required>
@@ -141,8 +191,10 @@ export function ApplyForm({
                   value={values.email}
                   onChange={set("email")}
                   aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? id("email-err") : undefined}
                   autoComplete="email"
                 />
+                <FieldError show={errors.email} field="email" errId={id("email-err")} />
               </div>
               <div>
                 <Label htmlFor={id("phone")} required>
@@ -154,8 +206,10 @@ export function ApplyForm({
                   value={values.phone}
                   onChange={set("phone")}
                   aria-invalid={!!errors.phone}
+                  aria-describedby={errors.phone ? id("phone-err") : undefined}
                   autoComplete="tel"
                 />
+                <FieldError show={errors.phone} field="phone" errId={id("phone-err")} />
               </div>
             </div>
 
@@ -195,6 +249,8 @@ export function ApplyForm({
               />
               <button
                 type="button"
+                id={id("cvTrigger")}
+                aria-describedby={errors.file ? id("file-err") : undefined}
                 onClick={() => fileRef.current?.click()}
                 className={cn(
                   "flex w-full items-center justify-center border px-4 py-3 font-display text-[14px] text-ink transition-colors hover:bg-ink hover:text-paper",
@@ -204,6 +260,7 @@ export function ApplyForm({
                 {file ? file.name : "Upload"}
               </button>
               <p className="mt-1.5 text-[12px] text-muted">PDF, max 5MB.</p>
+              <FieldError show={errors.file} field="file" errId={id("file-err")} />
             </div>
 
             {/* consent (required per brief) */}
@@ -211,6 +268,8 @@ export function ApplyForm({
               <input
                 type="checkbox"
                 checked={consent}
+                id={id("consent")}
+                aria-describedby={errors.consent ? id("consent-err") : undefined}
                 onChange={(e) => {
                   setConsent(e.target.checked);
                   setErrors((x) => ({ ...x, consent: false }));
@@ -225,6 +284,11 @@ export function ApplyForm({
                 in line with the privacy policy.
               </span>
             </label>
+            <FieldError
+              show={errors.consent}
+              field="consent"
+              errId={id("consent-err")}
+            />
 
             <button
               type="submit"

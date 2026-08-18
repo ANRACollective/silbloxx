@@ -2,25 +2,26 @@ import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { BracketImage } from "@/components/ui/BracketImage";
 import { Reveal } from "@/components/ui/Reveal";
-import { ArrowRight } from "@/components/ui/icons";
 
 /**
- * Hero — headline + intro + CTAs, over an overlapping three-photo collage.
- * Desktop: absolute collage (big centre plate, worker upper-right with a solid
- * black block, robot lower-left with an L-bracket). Mobile: photos stack.
+ * Hero — recruitment-led headline + intro, over a three-photo collage.
+ *
+ * Client feedback (14.08): imagery was too heavily weighted toward machines.
+ * The collage now leads with people — the operator plate is the large primary
+ * frame and `hero-team.jpg` is a dedicated human slot. Both are drop-in:
+ * replace the files in /public/images keeping the same filenames.
  */
 export function Hero() {
   return (
     <section className="relative overflow-hidden pt-10 lg:pt-16">
       <Container>
         <Reveal className="max-w-[760px]">
-          <h1 className="h1 text-ink">
-            Your reliable supplier of innovative silos
-          </h1>
-          <p className="mt-7 max-w-[560px] text-[18px] leading-[1.5] text-muted">
-            Silbloxx Asia is the Vietnamese arm of Silbloxx. We are part of an
-            international industrial group, BRIAM, active in food and feed
-            infrastructure projects worldwide.
+          <h1 className="h1 text-ink">Build the future with us.</h1>
+          <p className="mt-7 max-w-[580px] text-[18px] leading-[1.5] text-muted">
+            SILBLOXX is expanding its manufacturing footprint in Vietnam. Backed
+            by BRIAM, a Belgian family-owned industrial group with decades of
+            experience in bulk storage, we are building a new production
+            operation and the team that will make it happen.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <Button href="/#open-positions" size="lg">
@@ -33,59 +34,60 @@ export function Hero() {
         </Reveal>
       </Container>
 
-      {/* Mobile: stacked photos */}
+      {/* Mobile: stacked photos — people first.
+          Corner brackets standardised to tr/bl on every frame (client 14.08). */}
       <Container className="mt-12 space-y-6 lg:hidden">
-        <BracketImage
-          src="/images/hero-robot.jpg"
-          alt="Robotic welding cell throwing blue sparks on the Silbloxx line"
-          corners={["tr", "bl"]}
-          className="aspect-[4/3] w-full"
-          placeholderLabel="Robotic welding — sparks"
-          priority
-        />
-        <BracketImage
-          src="/images/hero-welding-line.jpg"
-          alt="Overhead view of an automated welding line assembling a silo panel"
-          corners={[]}
-          className="aspect-[16/10] w-full"
-          placeholderLabel="Automated welding line"
-        />
         <BracketImage
           src="/images/hero-worker.jpg"
           alt="Silbloxx operator guiding a steel panel with a lifting chain"
           corners={["tr", "bl"]}
           className="aspect-[4/5] w-full"
           placeholderLabel="Operator on the floor"
+          priority
+        />
+        <BracketImage
+          src="/images/hero-team.jpg"
+          alt="Silbloxx Asia production team at work on the shop floor"
+          corners={["tr", "bl"]}
+          className="aspect-[4/3] w-full"
+          placeholderLabel="Production team"
+        />
+        <BracketImage
+          src="/images/hero-welding-line.jpg"
+          alt="Overhead view of an automated welding line assembling a silo panel"
+          corners={["tr", "bl"]}
+          className="aspect-[16/10] w-full"
+          placeholderLabel="Automated welding line"
         />
       </Container>
 
-      {/* Desktop: structured featured strip */}
+      {/* Desktop: structured featured strip — operator plate leads */}
       <Container className="mt-12 hidden lg:block">
         <Reveal>
           <div className="grid h-[480px] grid-cols-12 gap-4">
             <BracketImage
-              src="/images/hero-welding-line.jpg"
-              alt="Overhead view of an automated welding line assembling a silo panel"
+              src="/images/hero-worker.jpg"
+              alt="Silbloxx operator guiding a steel panel with a lifting chain"
               corners={["bl"]}
               bracket={60}
               className="col-span-6 h-full"
-              placeholderLabel="Automated welding line"
+              placeholderLabel="Operator on the floor"
               priority
             />
             <BracketImage
-              src="/images/hero-worker.jpg"
-              alt="Silbloxx operator guiding a steel panel with a lifting chain"
+              src="/images/hero-team.jpg"
+              alt="Silbloxx Asia production team at work on the shop floor"
               corners={[]}
               className="col-span-3 h-full"
-              placeholderLabel="Operator on the floor"
+              placeholderLabel="Production team"
             />
             <BracketImage
-              src="/images/hero-robot.jpg"
-              alt="Robotic welding cell throwing blue sparks on the Silbloxx line"
+              src="/images/hero-welding-line.jpg"
+              alt="Overhead view of an automated welding line assembling a silo panel"
               corners={["tr"]}
               bracket={60}
               className="col-span-3 h-full"
-              placeholderLabel="Robotic welding — sparks"
+              placeholderLabel="Automated welding line"
             />
           </div>
         </Reveal>

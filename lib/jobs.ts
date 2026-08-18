@@ -25,7 +25,7 @@ export const JOBS: Job[] = [
     team: "Manufacturing",
     location: "An Khánh Ward, HCMC",
     type: "Full-time",
-    posted: "5 May 2026",
+    posted: "3 Aug 2026",
     summary: "Run the line. Build the silos that ship around the world.",
     intro:
       "Lead a shift on the new Silbloxx Asia production line. You keep output, quality, and safety on track every day.",
@@ -56,7 +56,7 @@ export const JOBS: Job[] = [
     team: "Operations",
     location: "Ho Chi Minh City",
     type: "Full-time",
-    posted: "5 May 2026",
+    posted: "6 Aug 2026",
     summary: "Build the local supply base that keeps the line moving.",
     intro:
       "Own procurement for the new Silbloxx Asia facility — from raw steel to consumables. You build a reliable, cost-smart local supply base.",
@@ -87,7 +87,7 @@ export const JOBS: Job[] = [
     team: "Quality",
     location: "An Khánh Ward, HCMC",
     type: "Full-time",
-    posted: "5 May 2026",
+    posted: "10 Aug 2026",
     summary: "Hold the line on quality — to group and ISO 9001 standards.",
     intro:
       "Own quality on the shop floor as Silbloxx Asia builds toward ISO 9001 in year one. You make sure every silo leaves the plant right.",
@@ -118,7 +118,7 @@ export const JOBS: Job[] = [
     team: "Manufacturing",
     location: "An Khánh Ward, HCMC",
     type: "Full-time",
-    posted: "5 May 2026",
+    posted: "12 Aug 2026",
     summary: "Keep welding robots and coating lines running at full tilt.",
     intro:
       "Keep the machines that build the silos running. You handle preventive and reactive maintenance across the new production line.",
@@ -149,7 +149,7 @@ export const JOBS: Job[] = [
     team: "People & Admin",
     location: "An Khánh Ward, HCMC",
     type: "Full-time",
-    posted: "5 May 2026",
+    posted: "14 Aug 2026",
     summary: "Help build the team behind a facility scaling to 120+.",
     intro:
       "Support the people side of a facility growing from zero to 120+. You keep HR and admin running smoothly as the team scales.",
@@ -180,7 +180,7 @@ export const JOBS: Job[] = [
     team: "HSE",
     location: "An Khánh Ward, HCMC",
     type: "Full-time",
-    posted: "5 May 2026",
+    posted: "17 Aug 2026",
     summary: "Make safety the default on a brand-new industrial site.",
     intro:
       "Own health and safety as Silbloxx Asia builds and commissions its new facility. You make safe work the default, not the exception.",

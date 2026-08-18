@@ -20,6 +20,7 @@ export function BracketImage({
   imgClassName,
   bracket = 56,
   thickness = 8,
+  bracketColor = "var(--color-ink)",
   priority,
   placeholderLabel,
 }: {
@@ -30,6 +31,8 @@ export function BracketImage({
   imgClassName?: string;
   bracket?: number;
   thickness?: number;
+  /** Bracket fill — override on dark surfaces where black would disappear. */
+  bracketColor?: string;
   priority?: boolean;
   placeholderLabel?: string;
 }) {
@@ -64,7 +67,13 @@ export function BracketImage({
       </div>
 
       {corners.map((c) => (
-        <Bracket key={c} corner={c} size={bracket} thickness={thickness} />
+        <Bracket
+          key={c}
+          corner={c}
+          size={bracket}
+          thickness={thickness}
+          color={bracketColor}
+        />
       ))}
     </div>
   );
@@ -74,10 +83,12 @@ function Bracket({
   corner,
   size,
   thickness,
+  color,
 }: {
   corner: Corner;
   size: number;
   thickness: number;
+  color: string;
 }) {
   const off = -Math.round(thickness * 0.5);
   const pos: Record<Corner, React.CSSProperties> = {
@@ -90,7 +101,7 @@ function Bracket({
     position: "absolute",
     width: size,
     height: thickness,
-    background: "var(--color-ink)",
+    background: color,
     ...(corner.includes("t") ? { top: 0 } : { bottom: 0 }),
     ...(corner.includes("l") ? { left: 0 } : { right: 0 }),
   };
@@ -98,7 +109,7 @@ function Bracket({
     position: "absolute",
     width: thickness,
     height: size,
-    background: "var(--color-ink)",
+    background: color,
     ...(corner.includes("t") ? { top: 0 } : { bottom: 0 }),
     ...(corner.includes("l") ? { left: 0 } : { right: 0 }),
   };

@@ -8,10 +8,12 @@ import { Wordmark } from "@/components/ui/Wordmark";
 import { MenuIcon, CloseIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 
-const LINKS = [
-  { label: "Careers", href: "/#why" },
-  { label: "Open Positions", href: "/#open-positions" },
-];
+/**
+ * Client feedback (14.08): "Open Positions" and "Careers" led to essentially
+ * the same content, so only "Careers" remains — carrying the CTA treatment and
+ * pointing at the roles list.
+ */
+const LINKS = [{ label: "Careers", href: "/#open-positions" }];
 
 function LangToggle({ className }: { className?: string }) {
   const [lang, setLang] = useState<"EN" | "VN">("EN");
@@ -81,16 +83,10 @@ export function Navbar() {
         {/* Desktop */}
         <nav className="hidden items-center gap-7 lg:flex">
           <Link
-            href="/#why"
-            className="font-display text-[15px] text-ink transition-colors duration-200 hover:text-orange"
-          >
-            Careers
-          </Link>
-          <Link
             href="/#open-positions"
             className="bg-orange px-5 py-2.5 font-display text-[14px] text-paper transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-8px_rgba(255,46,0,0.5)]"
           >
-            Open Positions
+            Careers
           </Link>
           <LangToggle />
         </nav>

@@ -22,7 +22,8 @@ function MailLink({ children }: { children: string }) {
   return (
     <a
       href={`mailto:${children}`}
-      className="text-orange underline decoration-orange/40 underline-offset-2 transition-colors hover:decoration-orange"
+      /* long addresses must wrap inside their column rather than spill out */
+      className="[overflow-wrap:anywhere] text-orange underline decoration-orange/40 underline-offset-2 transition-colors hover:decoration-orange"
     >
       {children}
     </a>
@@ -46,7 +47,7 @@ export function Footer() {
         <div className="h-[6px] w-full bg-ink" />
 
         {/* columns */}
-        <div className="relative mt-12 grid grid-cols-2 gap-x-8 gap-y-12 pr-16 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1fr_1fr_1.5fr] lg:gap-x-10 lg:pr-0">
+        <div className="relative mt-12 grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1fr_1fr_1.5fr] lg:gap-x-10">
           <div className="space-y-3 text-[14px] leading-relaxed text-muted">
             <ColHeading>Head Office</ColHeading>
             <p>
@@ -120,9 +121,15 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Oversized lockup — horizontal on desktop */}
-        <div className="mt-16 hidden lg:block">
-          <Wordmark stretch thickness="0.13em" className="text-[128px] text-ink" />
+        {/* Oversized lockup — horizontal at every breakpoint.
+            Client feedback (14.08): the mobile version used to rotate 90° and
+            ate the horizontal space the footer columns needed. */}
+        <div className="mt-14 lg:mt-16">
+          <Wordmark
+            stretch
+            thickness="0.13em"
+            className="text-[clamp(44px,13vw,128px)] text-ink"
+          />
         </div>
 
         {/* bottom bar */}
@@ -138,16 +145,6 @@ export function Footer() {
           </div>
         </div>
       </Container>
-
-      {/* Oversized lockup — vertical on mobile, pinned to the right edge */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-1 top-6 bottom-6 z-0 w-[64px] lg:hidden"
-      >
-        <div className="absolute left-1/2 top-1/2 h-[64px] w-[560px] -translate-x-1/2 -translate-y-1/2 -rotate-90">
-          <Wordmark stretch thickness="0.13em" className="h-full text-[56px] text-ink" />
-        </div>
-      </div>
     </footer>
   );
 }
