@@ -77,7 +77,8 @@ export function Navbar() {
           aria-label="Silbloxx Asia home"
           className="text-ink transition-transform duration-300 ease-[var(--ease-brand)] hover:-translate-y-[1px]"
         >
-          <Wordmark className="text-[22px] lg:text-[26px]" />
+          {/* size = mark height (the vector stands 1em tall) */}
+          <Wordmark className="text-[16px] lg:text-[19px]" />
         </Link>
 
         {/* Desktop */}

@@ -124,11 +124,17 @@ export function Footer() {
         {/* Oversized lockup — horizontal at every breakpoint.
             Client feedback (14.08): the mobile version used to rotate 90° and
             ate the horizontal space the footer columns needed. */}
-        <div className="mt-14 lg:mt-16">
+        {/* The lockup's minimum width is a fixed multiple of its height
+            (10.13 : 1), so its size is driven off the *container* width via
+            container-query units — `vw` would ignore the page gutters and
+            push the final X off-screen on small viewports. */}
+        <div
+          className="mt-14 lg:mt-16"
+          style={{ containerType: "inline-size" }}
+        >
           <Wordmark
             stretch
-            thickness="0.13em"
-            className="text-[clamp(44px,13vw,128px)] text-ink"
+            className="text-[min(92px,calc(100cqi/10.15))] text-ink"
           />
         </div>
 

@@ -88,8 +88,13 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
 - **Display font** — swap Archivo Black for licensed **Druk Wide/Text Bold**: drop
   `DrukWide-Bold.woff2` into `app/fonts/` and switch `app/layout.tsx` from
   `next/font/google` to `next/font/local` (keep the `--font-display` variable).
-- **Logo** — the SILBLOXX wordmark is a faithful CSS recreation (recolours + stretches).
-  Replace with the official vector (Drive > Logos) for pixel-exact if desired.
+- ~~**Logo** — CSS recreation~~ **Done.** `components/ui/Wordmark.tsx` is now built from
+  the official vector (Drive > Logos > `Logo_Silbloxx.svg`, kept at
+  `public/brand/silbloxx-wordmark.svg`). The letterforms are the real outlines; the "O"
+  is rendered as a bordered box using the artwork's exact proportions (37.812 × 19.7,
+  side strokes 6.531, caps 4.898) so the footer lockup can stretch horizontally without
+  distorting stroke weights. Colour follows `currentColor`; size is set by font-size,
+  and the mark stands exactly 1em tall.
 - **Apply form** — front-end only (validation + success state). Wire submission to an
   email handler / Sanity CMS at go-live (per brief).
 - **EN / VN** — the language toggle is visual; wire Vietnamese copy (agency-managed).
