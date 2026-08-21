@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { Reveal, RevealGroup, revealItem } from "@/components/ui/Reveal";
 
@@ -35,6 +35,8 @@ const REASONS = [
 ];
 
 export function WhyWorkHere() {
+  const reduce = useReducedMotion();
+
   return (
     <section id="why" className="scroll-mt-24 overflow-hidden py-20">
       <Container className="flex flex-col gap-8">
@@ -42,7 +44,27 @@ export function WhyWorkHere() {
           <h2 className="h1 text-ink">Why join (us) now?</h2>
         </Reveal>
 
-        <Reveal className="relative h-[380px] w-full overflow-hidden">
+        {/* Curtain wipe — the photo unmasks left to right as the band scrolls in.
+            Animating clip-path (not width) keeps the image itself perfectly
+            still underneath, so nothing squashes or reflows during the reveal.
+            The trigger sits on this wrapper, which is never clipped by an
+            ancestor — putting it on the clipped child would mean it never
+            registers as on-screen. */}
+        <motion.div
+          className="relative h-[380px] w-full overflow-hidden"
+          initial={reduce ? "show" : "hidden"}
+          whileInView="show"
+          viewport={{ once: true, margin: "-12% 0px" }}
+          variants={{
+            hidden: { clipPath: "inset(0 100% 0 0)" },
+            show: {
+              clipPath: "inset(0 0% 0 0)",
+              transition: reduce
+                ? { duration: 0 }
+                : { duration: 1.05, ease: [0.16, 1, 0.3, 1] },
+            },
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/why-team.jpg"
@@ -50,7 +72,7 @@ export function WhyWorkHere() {
             className="h-full w-full object-cover object-[center_35%]"
             loading="lazy"
           />
-        </Reveal>
+        </motion.div>
 
         <RevealGroup
           as="div"

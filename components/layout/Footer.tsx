@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Container } from "./Container";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { Marquee } from "@/components/ui/motion";
 import { BriamMark } from "@/components/ui/BriamMark";
 import {
   FacebookIcon,
@@ -123,13 +122,30 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Oversized lockup — horizontal at every breakpoint (14.08: the mobile
-            version used to rotate 90° and ate the footer columns' space).
-            Now drifts slowly across the footer; Marquee falls back to a static
-            row under prefers-reduced-motion. */}
-        <Marquee className="mt-14 lg:mt-16" duration={40}>
-          <Wordmark className="text-[clamp(40px,7vw,84px)] text-ink" />
-        </Marquee>
+        {/* Oversized lockup — the Figma's stretched treatment, where the O runs
+            long to fill the width. Horizontal at every breakpoint (14.08: the
+            mobile version used to rotate 90° and ate the columns' space).
+            Sized off the *container* width via container-query units: the
+            lockup has a hard 10.13:1 minimum aspect, and `vw` would ignore the
+            page gutters and push the final X off-screen on small viewports.
+            The O opens out from its natural width on scroll-in. */}
+        <div
+          className="mt-14 lg:mt-16"
+          style={{ containerType: "inline-size" }}
+        >
+          {/* Height cap measured off the Figma frame export: the lockup there is
+              1310 x 52 (25.3:1), splitting SILBL 21.2% / O 67.7% / XX 11.1%.
+              Capping at 92px made the lockup too tall, which inflated SILBL and
+              XX and squeezed the O down to 42%. The glyph ratio was already
+              correct (SILBL:XX is 1.90 in both) — only the height was off.
+              Below ~527px of container the 10.15:1 minimum takes over and the
+              O sits at its natural width, which is the mobile case. */}
+          <Wordmark
+            stretch
+            animate
+            className="text-[min(52px,calc(100cqi/10.15))] text-ink"
+          />
+        </div>
 
         {/* bottom bar */}
         <div className="mt-10 flex flex-col gap-4 border-t border-ink/10 pt-6 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between lg:mt-8 lg:border-t-0 lg:pt-0">

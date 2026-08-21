@@ -125,11 +125,19 @@ anchor, not a button.
 (1s reveals, 0.2–0.3s micro-interactions):
 
 - `SplitHeading` — hero headline rises in word by word
-- `Parallax` — hero plates drift at three different rates; About image at a fourth
+- `Parallax` — one gentle drift on the hero strip; About image at its own rate
+- Curtain wipe on the why-join photo band — `clip-path` inset animates left to
+  right, so the image itself never moves or squashes underneath
 - `CountUp` — factory-fact stats count up (only where there's a leading number;
   "ISO 9001" and "Q4 2026" are left alone)
-- `Marquee` — the footer lockup drifts across. **Note this replaces the stretched
-  lockup from the Figma** — the wordmark is now normal-proportion and repeating.
+- Footer lockup keeps the Figma's **stretched** treatment (the O runs long) and
+  now opens out from its natural width on scroll-in — animating `flex-grow`, not
+  `scaleX`, since scaling would squash the O's side strokes. Its height is capped
+  at **52px**, measured off the frame export: the Figma lockup is 1310 x 52
+  (25.3:1) splitting SILBL 21.2% / O 67.7% / XX 11.1%. The build now measures
+  25.2:1 and 21.1 / 67.2 / 11.1. A 92px cap made the lockup too tall, which
+  inflated the letters and squeezed the O to 42%.
+- `Marquee` in `motion.tsx` is unused — kept as an available primitive.
 - link underlines wipe in, nav shrinks on scroll, cards lift, images zoom
 
 Everything is gated on `prefers-reduced-motion` and settles visible.

@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/cn";
 
 /**
@@ -94,11 +97,37 @@ function Xx() {
 export function Wordmark({
   className,
   stretch = false,
+  animate = false,
 }: {
   className?: string;
   /** Footer lockup: the O grows to fill the row instead of keeping its width. */
   stretch?: boolean;
+  /**
+   * Stretch variant only: the O starts at its natural width and opens out to
+   * fill the row when scrolled into view, carrying "XX" with it. Animates
+   * flex-grow rather than scaleX — scaling would squash the O's side strokes,
+   * which are a fixed 33% of its height in the real artwork.
+   */
+  animate?: boolean;
 }) {
+  const reduce = useReducedMotion();
+  const animates = stretch && animate && !reduce;
+
+  const oStyle: React.CSSProperties = {
+    height: em(U.oH),
+    marginTop: em(U.oTop),
+    marginLeft: em(U.gapBefore),
+    marginRight: em(U.gapAfter),
+    width: stretch ? undefined : em(U.oW),
+    minWidth: stretch ? em(U.oW) : undefined,
+    borderLeftWidth: em(U.oSide),
+    borderRightWidth: em(U.oSide),
+    borderTopWidth: em(U.oCap),
+    borderBottomWidth: em(U.oCap),
+    borderStyle: "solid",
+    borderRadius: 0,
+  };
+
   return (
     <span
       role="img"
@@ -111,23 +140,18 @@ export function Wordmark({
     >
       <Silbl />
 
-      <span
+      <motion.span
         aria-hidden
         className={cn("block shrink-0 border-current", stretch && "flex-1")}
-        style={{
-          height: em(U.oH),
-          marginTop: em(U.oTop),
-          marginLeft: em(U.gapBefore),
-          marginRight: em(U.gapAfter),
-          width: stretch ? undefined : em(U.oW),
-          minWidth: stretch ? em(U.oW) : undefined,
-          borderLeftWidth: em(U.oSide),
-          borderRightWidth: em(U.oSide),
-          borderTopWidth: em(U.oCap),
-          borderBottomWidth: em(U.oCap),
-          borderStyle: "solid",
-          borderRadius: 0,
-        }}
+        style={oStyle}
+        initial={animates ? { flexGrow: 0 } : false}
+        whileInView={animates ? { flexGrow: 1 } : undefined}
+        viewport={{ once: true, margin: "-10% 0px" }}
+        transition={
+          animates
+            ? { duration: 1.15, ease: [0.16, 1, 0.3, 1] }
+            : { duration: 0 }
+        }
       />
 
       <Xx />
