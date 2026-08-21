@@ -3,14 +3,15 @@ import { Archivo_Black, Gruppo } from "next/font/google";
 import "./globals.css";
 
 /**
- * Display face — brand primary is the licensed "Druk Wide Bold".
- * Archivo Black is the brand-sanctioned free fallback (see brand guidelines).
- * Drop DrukWide-Bold.woff2 into app/fonts and swap to next/font/local to go 1:1.
+ * Fallback display face. The real face is Druk Text Medium, loaded via
+ * @font-face in globals.css from /public/fonts. This must NOT claim the
+ * `--font-display` variable: next/font sets its variable on <html>, which
+ * would override the @theme stack and drop "Druk Text" from the front of it.
  */
 const display = Archivo_Black({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-archivo",
   display: "swap",
 });
 

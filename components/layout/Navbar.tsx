@@ -72,11 +72,19 @@ export function Navbar() {
           : "border-b border-ink/10 bg-ground",
       )}
     >
-      <Container className="flex h-16 items-center justify-between lg:h-[72px] lg:py-0">
+      {/* subtle shrink once you start scrolling */}
+      <Container
+        className={cn(
+          "flex items-center justify-between transition-[height] duration-300 ease-out",
+          scrolled ? "h-14 lg:h-[60px]" : "h-16 lg:h-[72px]",
+        )}
+      >
+        {/* The mark must not move on hover — a logo is a fixed anchor, not a
+            button (feedback 21.08). Colour-only affordance instead. */}
         <Link
           href="/"
           aria-label="Silbloxx Asia home"
-          className="text-ink transition-transform duration-300 ease-[var(--ease-brand)] hover:-translate-y-[1px]"
+          className="text-ink transition-opacity duration-200 ease-out hover:opacity-70"
         >
           {/* size = mark height (the vector stands 1em tall) */}
           <Wordmark className="text-[16px] lg:text-[19px]" />
@@ -88,7 +96,7 @@ export function Navbar() {
         <nav className="hidden items-center gap-7 lg:flex">
           <Link
             href="/#open-positions"
-            className="font-display text-[20px] leading-[1.4] text-ink transition-colors duration-200 hover:text-orange"
+            className="link-underline font-display text-[20px] leading-[1.4] text-ink transition-colors duration-200 ease-out hover:text-orange"
           >
             Careers
           </Link>

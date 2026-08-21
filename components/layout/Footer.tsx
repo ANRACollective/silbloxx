@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "./Container";
 import { Wordmark } from "@/components/ui/Wordmark";
+import { Marquee } from "@/components/ui/motion";
 import { BriamMark } from "@/components/ui/BriamMark";
 import {
   FacebookIcon,
@@ -23,7 +24,7 @@ function MailLink({ children }: { children: string }) {
     <a
       href={`mailto:${children}`}
       /* long addresses must wrap inside their column rather than spill out */
-      className="[overflow-wrap:anywhere] text-orange underline decoration-orange/40 underline-offset-2 transition-colors hover:decoration-orange"
+      className="link-underline [overflow-wrap:anywhere] text-orange"
     >
       {children}
     </a>
@@ -122,22 +123,13 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Oversized lockup — horizontal at every breakpoint.
-            Client feedback (14.08): the mobile version used to rotate 90° and
-            ate the horizontal space the footer columns needed. */}
-        {/* The lockup's minimum width is a fixed multiple of its height
-            (10.13 : 1), so its size is driven off the *container* width via
-            container-query units — `vw` would ignore the page gutters and
-            push the final X off-screen on small viewports. */}
-        <div
-          className="mt-14 lg:mt-16"
-          style={{ containerType: "inline-size" }}
-        >
-          <Wordmark
-            stretch
-            className="text-[min(92px,calc(100cqi/10.15))] text-ink"
-          />
-        </div>
+        {/* Oversized lockup — horizontal at every breakpoint (14.08: the mobile
+            version used to rotate 90° and ate the footer columns' space).
+            Now drifts slowly across the footer; Marquee falls back to a static
+            row under prefers-reduced-motion. */}
+        <Marquee className="mt-14 lg:mt-16" duration={40}>
+          <Wordmark className="text-[clamp(40px,7vw,84px)] text-ink" />
+        </Marquee>
 
         {/* bottom bar */}
         <div className="mt-10 flex flex-col gap-4 border-t border-ink/10 pt-6 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between lg:mt-8 lg:border-t-0 lg:pt-0">

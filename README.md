@@ -102,6 +102,52 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   carrying the original brief's numbers. Client feedback (14.08) flagged these as
   pending accurate input; update `STATS` in `components/sections/About.tsx` when they land.
 
+## Feedback round — 21.08 (type, motion, logo)
+
+**The display font is in.** `public/fonts/DrukText-Medium.woff2`, wired via plain
+`@font-face` in `globals.css` (not `next/font/local`, so a missing file degrades
+to Archivo Black rather than failing the build).
+
+Two traps worth knowing if you touch the type:
+
+- `next/font` must **not** claim `--font-display`. It sets its variable on `<html>`,
+  which overrides the `@theme` stack and silently drops `"Druk Text"` from the
+  front of it. The Archivo Black fallback now uses `--font-archivo`.
+- The live corporate site uses **Druk Wide Bold** at h1 35px; the Figma uses
+  **Druk Text Medium** at 56px. Different cuts — sizes don't transfer between
+  them. Druk Text is condensed, so the "text looks huge" note turned out to be
+  the Archivo Black stand-in, not the sizes. Figma's 56px scale is kept as specced.
+
+**Logo no longer moves on hover** — it fades slightly instead. A mark is a fixed
+anchor, not a button.
+
+**Motion** (`components/ui/motion.tsx`), pitched at the register silbloxx.com uses
+(1s reveals, 0.2–0.3s micro-interactions):
+
+- `SplitHeading` — hero headline rises in word by word
+- `Parallax` — hero plates drift at three different rates; About image at a fourth
+- `CountUp` — factory-fact stats count up (only where there's a leading number;
+  "ISO 9001" and "Q4 2026" are left alone)
+- `Marquee` — the footer lockup drifts across. **Note this replaces the stretched
+  lockup from the Figma** — the wordmark is now normal-proportion and repeating.
+- link underlines wipe in, nav shrinks on scroll, cards lift, images zoom
+
+Everything is gated on `prefers-reduced-motion` and settles visible.
+
+### Three motion bugs found and fixed — read before adding more
+
+1. **`IntersectionObserver` clips a target's rect by ancestor `overflow:hidden`.**
+   The split words start translated fully outside their own clip, so they report
+   as never intersecting and a `whileInView` on *them* never fires — headline
+   permanently invisible. The trigger must sit on the unclipped heading, which
+   then propagates `hidden`/`show` to the words.
+2. **Motion propagates a parent's variant labels to descendant motion components**,
+   which suppresses a child's own gesture props. Don't nest an animated component
+   inside `<Reveal>` and expect its own `whileInView` to run.
+3. **Never swap markup on the reduced-motion branch.** Returning plain text (or a
+   different wrapper) when `useReducedMotion()` is true changes the DOM between
+   server and client and trips hydration (React #418). Vary the motion props only.
+
 ## Figma rebuild — LandingPage_Desktop (node 10219:43562)
 
 Rebuilt against the Figma file rather than by eye. Values below are the design's

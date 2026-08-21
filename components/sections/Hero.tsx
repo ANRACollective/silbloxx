@@ -1,8 +1,11 @@
+"use client";
+
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { BracketImage } from "@/components/ui/BracketImage";
 import { Bracket } from "@/components/ui/Bracket";
 import { Reveal } from "@/components/ui/Reveal";
+import { SplitHeading, Parallax } from "@/components/ui/motion";
 
 /**
  * Hero — rebuilt 1:1 from Figma `Hero` (node 10220:794).
@@ -24,27 +27,33 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden py-20">
       <Container>
-        <Reveal className="flex w-full max-w-[768px] flex-col gap-8">
+        {/* NB: the headline is deliberately NOT wrapped in <Reveal>. Motion
+            propagates a parent's variant labels to descendant motion
+            components, which suppresses the per-word animation and leaves the
+            words parked behind their clip — i.e. an invisible headline. */}
+        <div className="flex w-full max-w-[768px] flex-col gap-8">
           <div className="flex flex-col gap-6">
-            <h1 className="h1 text-ink">Build the future with us.</h1>
-            <p className="text-justify text-[18px] leading-[1.5] text-ink">
-              SILBLOXX is expanding its manufacturing footprint in Vietnam.
-              Backed by BRIAM, a Belgian family-owned industrial group with
-              decades of experience in bulk storage, we are building a new
-              production operation and the team that will make it happen.
-            </p>
+            <SplitHeading
+              as="h1"
+              className="h1 text-ink"
+              text="Build the future with us."
+            />
+            <Reveal delay={0.18}>
+              <p className="text-justify text-[18px] leading-[1.5] text-ink">
+                SILBLOXX is expanding its manufacturing footprint in Vietnam.
+                Backed by BRIAM, a Belgian family-owned industrial group with
+                decades of experience in bulk storage, we are building a new
+                production operation and the team that will make it happen.
+              </p>
+            </Reveal>
           </div>
-          <div className="flex flex-wrap items-start gap-4">
+          <Reveal delay={0.28} className="flex flex-wrap items-start gap-4">
             <Button href="/#open-positions">View Open Positions</Button>
-            <Button
-              href="/#about"
-              variant="secondary"
-              className="lg:w-[185px]"
-            >
+            <Button href="/#about" variant="secondary" className="lg:w-[185px]">
               Learn More
             </Button>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </Container>
 
       {/* Mobile: photos stack */}
@@ -78,6 +87,7 @@ export function Hero() {
         <Reveal>
           <div className="flex w-full items-start gap-5">
             <div className="flex shrink-0 items-end self-stretch">
+              <Parallax distance={54}>
               <BracketImage
                 src="/images/hero-worker.jpg"
                 alt="Silbloxx operator guiding a steel panel with a lifting chain"
@@ -86,8 +96,10 @@ export function Hero() {
                 placeholderLabel="Operator on the floor"
                 priority
               />
+              </Parallax>
             </div>
             <div className="flex min-w-px flex-1 items-start py-[106px]">
+              <Parallax distance={22} className="w-full">
               <BracketImage
                 src="/images/hero-team.jpg"
                 alt="Silbloxx Asia production team at work on the shop floor"
@@ -95,14 +107,17 @@ export function Hero() {
                 className="h-[472px] w-full min-w-px flex-1"
                 placeholderLabel="Production team"
               />
+              </Parallax>
             </div>
+            <Parallax distance={78} className="shrink-0">
             <BracketImage
               src="/images/hero-welding-line.jpg"
               alt="Overhead view of an automated welding line assembling a silo panel"
               corners={[]}
-              className="h-[360px] w-[270px] shrink-0"
+              className="h-[360px] w-[270px]"
               placeholderLabel="Automated welding line"
             />
+            </Parallax>
           </div>
         </Reveal>
       </Container>

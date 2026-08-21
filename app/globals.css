@@ -1,6 +1,25 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ *
+ *  Display face — Druk Text Medium (licensed, supplied by the client)
+ *
+ *  This is the cut the Figma specs. Note the live corporate site uses a
+ *  different cut — Druk *Wide* Bold — so type sizes don't transfer 1:1
+ *  between the two: Druk Text is condensed, Druk Wide is not.
+ *
+ *  Declared as plain @font-face rather than next/font/local on purpose: a
+ *  missing file degrades silently to Archivo Black instead of failing the
+ *  build.
+ * ------------------------------------------------------------------ */
+@font-face {
+  font-family: "Druk Text";
+  src: url("/fonts/DrukText-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------ *
  *  Silbloxx Asia — Design tokens
  *  Source of truth: Drive › Docs from SD › 03-brand-guidelines.md
  * ------------------------------------------------------------------ */
@@ -20,8 +39,10 @@
      a noise fill that the properties panel doesn't surface. */
   --color-ground: #f9f9f9;
 
-  /* Type — Druk Text Medium (licensed) → Archivo Black sanctioned fallback */
-  --font-display: var(--font-display), "Archivo Black", system-ui, sans-serif;
+  /* Type — licensed Druk Text Medium first (see @font-face above), falling
+     back to Archivo Black if the .woff2 is ever missing. */
+  --font-display: "Druk Text", var(--font-archivo), "Archivo Black",
+    system-ui, sans-serif;
   --font-body: var(--font-body), "Gruppo", system-ui, sans-serif;
 
   /* Spacing tokens — Figma variables */
@@ -105,6 +126,10 @@
     font-weight: 400;
     letter-spacing: 0; /* Figma: letterSpacing 0 */
   }
+  /* Figma scale, kept as specced. The "text looks huge" note (21.08) was the
+     Archivo Black stand-in, not the sizes — Druk Text is condensed, so 56px
+     in the real face is far tighter than 56px in the fallback. Verified by
+     rendering both side by side before deciding. */
   .h1 {
     font-size: 2.5rem;
     line-height: 1.2;
@@ -194,6 +219,27 @@
   .grain > * {
     position: relative;
     z-index: 1;
+  }
+
+  /* Link underline that wipes in from the left on hover, matching the 0.3s
+     ease-out micro-interaction timing used across silbloxx.com. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 0.3s ease-out;
+    padding-bottom: 1px;
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .link-underline {
+      background-size: 100% 1px;
+    }
   }
 
   /* Yellow radial wash used behind hero / footer lockups */

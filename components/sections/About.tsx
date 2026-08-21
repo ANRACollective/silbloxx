@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { BracketImage } from "@/components/ui/BracketImage";
 import { Reveal, RevealGroup, revealItem } from "@/components/ui/Reveal";
+import { CountUp, Parallax } from "@/components/ui/motion";
 
 /**
  * Factory facts. Still the original brief's numbers — the client flagged these
@@ -26,7 +27,9 @@ function StatGrid() {
       {STATS.map((s) => (
         <motion.div key={s.label} variants={revealItem}>
           <div className="font-display text-[34px] leading-[1.3] text-ink lg:text-[40px]">
-            {s.value}
+            {/* counts only where there's a leading number — "ISO 9001" and
+                "Q4 2026" render untouched */}
+            <CountUp value={s.value} />
           </div>
           <div className="mt-3 font-display text-[18px] leading-[1.4] text-ink">
             {s.label}
@@ -56,14 +59,16 @@ export function About() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <BracketImage
-            src="/images/about-facility.jpg"
-            alt="Silbloxx Asia silo facility at dusk in Ho Chi Minh City"
-            corners={["tr", "bl"]}
-            bracket={64}
-            className="aspect-[5/6] w-full lg:aspect-auto lg:h-[560px]"
-            placeholderLabel="HCMC silo facility"
-          />
+          <Parallax distance={44}>
+            <BracketImage
+              src="/images/about-facility.jpg"
+              alt="Silbloxx Asia silo facility at dusk in Ho Chi Minh City"
+              corners={["tr", "bl"]}
+              bracket={64}
+              className="aspect-[5/6] w-full lg:aspect-auto lg:h-[560px]"
+              placeholderLabel="HCMC silo facility"
+            />
+          </Parallax>
         </Reveal>
       </Container>
     </section>
