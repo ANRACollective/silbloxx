@@ -24,21 +24,21 @@ import { SplitHeading, Parallax } from "@/components/ui/motion";
  */
 export function Hero() {
   return (
-    <section className="section relative overflow-hidden">
+    <section className="relative overflow-hidden py-20">
       <Container>
         {/* NB: the headline is deliberately NOT wrapped in <Reveal>. Motion
             propagates a parent's variant labels to descendant motion
             components, which suppresses the per-word animation and leaves the
             words parked behind their clip — i.e. an invisible headline. */}
-        <div className="flex w-full flex-col gap-10">
-          <div className="flex flex-col gap-7">
+        <div className="flex w-full max-w-[768px] flex-col gap-8">
+          <div className="flex flex-col gap-6">
             <SplitHeading
               as="h1"
-              className="h1 measure-tight text-ink"
+              className="h1 text-ink"
               text="Build the future with us."
             />
             <Reveal delay={0.18}>
-              <p className="measure text-[18px] leading-[1.7] text-body">
+              <p className="text-justify text-[18px] leading-[1.5] text-ink">
                 SILBLOXX is expanding its manufacturing footprint in Vietnam.
                 Backed by BRIAM, a Belgian family-owned industrial group with
                 decades of experience in bulk storage, we are building a new
@@ -56,7 +56,7 @@ export function Hero() {
       </Container>
 
       {/* Mobile: photos stack */}
-      <Container className="mt-14 space-y-5 lg:hidden">
+      <Container className="mt-12 space-y-6 lg:hidden">
         <BracketImage
           src="/images/hero-worker.jpg"
           alt="Silbloxx operator guiding a steel panel with a lifting chain"
@@ -87,7 +87,7 @@ export function Hero() {
           rather than composed, so they now sit on one baseline at equal height
           with a single gentle parallax on the whole row. Brackets are attached
           to the outer plates instead of floating free. */}
-      <Container className="mt-16 hidden lg:block">
+      <Container className="mt-12 hidden lg:block">
         <Reveal>
           <Parallax distance={28}>
             <div className="flex h-[440px] w-full items-stretch gap-5">

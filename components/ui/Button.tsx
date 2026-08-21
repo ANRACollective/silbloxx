@@ -11,30 +11,21 @@ const base =
   "focus-visible:ring-offset-paper will-change-transform select-none";
 
 /**
- * The Figma sets every button label at Heading-6 (20px). At that size a button
- * competes with the section headings around it, which is part of why the page
- * read as loud. Labels step down to 16px with a little tracking, and the boxes
- * gain horizontal room — a wider, quieter button reads as more considered than
- * a tight, shouty one.
+ * Figma buttons: px 18 / py 12 with a Heading-6 label (Druk Text Medium
+ * 20px/1.4). `sm` is the in-card Apply Now variant (px 16 / py 8, full width).
  */
 const sizes: Record<Size, string> = {
-  sm: "px-[22px] py-[13px] text-[15px] tracking-[0.02em] leading-none",
-  md: "px-[28px] py-[16px] text-[16px] tracking-[0.02em] leading-none",
-  lg: "px-[32px] py-[18px] text-[16px] tracking-[0.02em] leading-none",
+  sm: "px-[16px] py-[8px] text-[20px] leading-[1.4]",
+  md: "px-[18px] py-[12px] text-[20px] leading-[1.4]",
+  lg: "px-[18px] py-[12px] text-[20px] leading-[1.4]",
 };
 
-/**
- * Colour discipline: orange marks the single primary action in a view. Every
- * other control is ink or hairline, so the one orange thing on screen actually
- * means something. Hover lifts are 2px, not 4 — enough to feel responsive,
- * not enough to draw the eye away from the content.
- */
 const variants: Record<Variant, string> = {
   primary:
-    "border border-orange bg-orange text-paper hover:-translate-y-[2px] hover:shadow-[0_12px_28px_-14px_rgba(255,46,0,0.65)] active:translate-y-0",
+    "border border-orange bg-orange text-paper hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-8px_rgba(255,46,0,0.55)] active:translate-y-0",
   secondary:
-    "border border-line text-ink bg-transparent hover:border-ink hover:-translate-y-[2px] active:translate-y-0",
-  dark: "bg-ink text-paper hover:-translate-y-[2px] hover:bg-[#1b1b1b] active:translate-y-0",
+    "border border-ink text-ink bg-transparent hover:bg-ink hover:text-paper hover:-translate-y-0.5 active:translate-y-0",
+  dark: "bg-ink text-paper hover:-translate-y-0.5 hover:bg-[#1b1b1b] active:translate-y-0",
   ghost: "text-ink px-0 py-0 hover:text-orange",
 };
 

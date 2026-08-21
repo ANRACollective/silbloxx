@@ -13,13 +13,13 @@ function InfoTable({ job }: { job: Job }) {
     ["Posted", job.posted],
   ];
   return (
-    <dl className="border-t border-hairline">
+    <dl className="border-t border-ink">
       {rows.map(([k, v]) => (
-        <div key={k} className="flex items-center gap-6 border-b border-hairline py-4">
-          <dt className="label w-[104px] shrink-0">
+        <div key={k} className="flex items-center gap-6 border-b border-ink py-3.5">
+          <dt className="w-[92px] shrink-0 font-display text-[16px] text-ink">
             {k}
           </dt>
-          <dd className="text-[16px] text-body">{v}</dd>
+          <dd className="text-[15px] text-muted">{v}</dd>
         </div>
       ))}
     </dl>
@@ -28,10 +28,10 @@ function InfoTable({ job }: { job: Job }) {
 
 function BulletList({ items }: { items: string[] }) {
   return (
-    <ul className="mt-5 space-y-3.5">
+    <ul className="mt-4 space-y-2.5">
       {items.map((it) => (
-        <li key={it} className="flex gap-3.5 text-[17px] leading-[1.7] text-body">
-          <span className="mt-[11px] h-1 w-1 shrink-0 rounded-full bg-[color:var(--color-muted)]" />
+        <li key={it} className="flex gap-3 text-[16px] leading-[1.5] text-muted">
+          <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
           <span>{it}</span>
         </li>
       ))}
@@ -41,16 +41,16 @@ function BulletList({ items }: { items: string[] }) {
 
 function Body({ job }: { job: Job }) {
   return (
-    <div className="space-y-16">
+    <div className="space-y-11">
       <div>
-        <h1 className="h2 measure-tight text-ink">{job.title}</h1>
-        <p className="measure mt-6 text-[18px] leading-[1.7] text-body">
+        <h1 className="h2 text-ink">{job.title}</h1>
+        <p className="mt-5 max-w-[560px] text-[17px] leading-[1.55] text-muted">
           {job.intro}
         </p>
       </div>
       <section>
         <h2 className="h4 text-ink">Your role</h2>
-        <p className="measure mt-5 text-[17px] leading-[1.7] text-body">
+        <p className="mt-4 max-w-[560px] text-[16px] leading-[1.55] text-muted">
           {job.roleLead}
         </p>
         <BulletList items={job.role} />
@@ -70,33 +70,33 @@ function Body({ job }: { job: Job }) {
 function NeedMore() {
   return (
     <div>
-      <h2 className="font-display text-[20px] leading-[1.3] text-ink">
+      <h2 className="font-display text-[20px] leading-none tracking-[-0.01em] text-ink">
         Need more information?
       </h2>
-      <p className="measure mt-4 text-[17px] leading-[1.7] text-body">
+      <p className="mt-4 max-w-[420px] text-[16px] leading-[1.55] text-muted">
         Reach out to the Silbloxx Asia People team. We&apos;re happy to talk.
       </p>
       <p className="mt-3 text-[15px]">
         <a
           href="mailto:careers.asia@silbloxx.com"
-          className="link-underline text-orange"
+          className="text-orange underline decoration-orange/40 underline-offset-2 hover:decoration-orange"
         >
           careers.asia@silbloxx.com
         </a>
       </p>
-      <p className="mt-1 text-[16px] text-muted">T +84 769 08 61 14</p>
+      <p className="mt-1 text-[15px] text-muted">T +84 769 08 61 14</p>
     </div>
   );
 }
 
 export function JobDetail({ job }: { job: Job }) {
   return (
-    <section className="py-12 lg:py-20">
+    <section className="py-10 lg:py-14">
       <Container>
         <Reveal>
           <Link
             href="/#open-positions"
-            className="group inline-flex items-center gap-2 font-display text-[15px] tracking-[0.02em] text-muted transition-colors duration-300 ease-out hover:text-ink"
+            className="group inline-flex items-center gap-2 border border-ink px-4 py-2.5 font-display text-[14px] text-ink transition-colors duration-300 ease-[var(--ease-brand)] hover:bg-ink hover:text-paper"
           >
             <ArrowLeft
               width={18}
@@ -108,7 +108,7 @@ export function JobDetail({ job }: { job: Job }) {
         </Reveal>
 
         {/* Mobile: info → body → form → contact */}
-        <div className="mt-10 space-y-14 lg:hidden">
+        <div className="mt-8 space-y-10 lg:hidden">
           <Reveal>
             <InfoTable job={job} />
           </Reveal>
@@ -124,8 +124,8 @@ export function JobDetail({ job }: { job: Job }) {
         </div>
 
         {/* Desktop: content left, sticky info + form right */}
-        <div className="mt-14 hidden lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-x-24">
-          <div className="space-y-16">
+        <div className="mt-10 hidden lg:grid lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start lg:gap-x-16">
+          <div className="space-y-14">
             <Reveal>
               <Body job={job} />
             </Reveal>
@@ -133,7 +133,7 @@ export function JobDetail({ job }: { job: Job }) {
               <NeedMore />
             </Reveal>
           </div>
-          <div className="sticky top-28 space-y-10">
+          <div className="sticky top-24 space-y-8">
             <Reveal>
               <InfoTable job={job} />
             </Reveal>
