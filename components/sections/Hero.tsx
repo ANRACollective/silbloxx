@@ -3,7 +3,6 @@
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { BracketImage } from "@/components/ui/BracketImage";
-import { Bracket } from "@/components/ui/Bracket";
 import { Reveal } from "@/components/ui/Reveal";
 import { SplitHeading, Parallax } from "@/components/ui/motion";
 
@@ -82,55 +81,42 @@ export function Hero() {
         />
       </Container>
 
-      {/* Desktop: the design's three-plate row */}
+      {/* Desktop: one aligned strip, 2:1:1.
+          The Figma staggers these three plates at different heights and insets
+          the centre one; combined with per-image parallax that read as scattered
+          rather than composed, so they now sit on one baseline at equal height
+          with a single gentle parallax on the whole row. Brackets are attached
+          to the outer plates instead of floating free. */}
       <Container className="mt-12 hidden lg:block">
         <Reveal>
-          <div className="flex w-full items-start gap-5">
-            <div className="flex shrink-0 items-end self-stretch">
-              <Parallax distance={54}>
+          <Parallax distance={28}>
+            <div className="flex h-[440px] w-full items-stretch gap-5">
               <BracketImage
                 src="/images/hero-worker.jpg"
                 alt="Silbloxx operator guiding a steel panel with a lifting chain"
-                corners={[]}
-                className="h-[330px] w-[270px]"
+                corners={["bl"]}
+                className="h-full min-w-px flex-[2]"
                 placeholderLabel="Operator on the floor"
                 priority
               />
-              </Parallax>
-            </div>
-            <div className="flex min-w-px flex-1 items-start py-[106px]">
-              <Parallax distance={22} className="w-full">
               <BracketImage
                 src="/images/hero-team.jpg"
                 alt="Silbloxx Asia production team at work on the shop floor"
                 corners={[]}
-                className="h-[472px] w-full min-w-px flex-1"
+                className="h-full min-w-px flex-1"
                 placeholderLabel="Production team"
               />
-              </Parallax>
+              <BracketImage
+                src="/images/hero-welding-line.jpg"
+                alt="Overhead view of an automated welding line assembling a silo panel"
+                corners={["tr"]}
+                className="h-full min-w-px flex-1"
+                placeholderLabel="Automated welding line"
+              />
             </div>
-            <Parallax distance={78} className="shrink-0">
-            <BracketImage
-              src="/images/hero-welding-line.jpg"
-              alt="Overhead view of an automated welding line assembling a silo panel"
-              corners={[]}
-              className="h-[360px] w-[270px]"
-              placeholderLabel="Automated welding line"
-            />
-            </Parallax>
-          </div>
+          </Parallax>
         </Reveal>
       </Container>
-
-      {/* Free-standing bracket accents (desktop only, as in the frame) */}
-      <Bracket
-        corner="bl"
-        className="absolute left-[42px] top-[938px] hidden text-ink lg:block"
-      />
-      <Bracket
-        corner="tr"
-        className="absolute left-[calc(83.33%+121px)] top-[285px] hidden text-ink lg:block"
-      />
 
       <span id="about" className="block h-0" />
     </section>
