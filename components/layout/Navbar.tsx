@@ -20,7 +20,10 @@ function LangToggle({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "inline-flex select-none items-center border border-orange text-[13px] font-display",
+        // Was an orange-filled switch, which put a saturated block in the
+        // navigation before the user had done anything. Hairline box, ink for
+        // the active language, muted for the alternative.
+        "inline-flex select-none items-center border border-hairline-strong text-[12px] tracking-[0.08em] font-display",
         className,
       )}
     >
@@ -31,8 +34,10 @@ function LangToggle({ className }: { className?: string }) {
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
           className={cn(
-            "px-3 py-1.5 leading-none transition-colors duration-200",
-            lang === l ? "bg-orange text-paper" : "bg-transparent text-ink",
+            "px-3 py-2 leading-none transition-colors duration-300 ease-out",
+            lang === l
+              ? "bg-ink text-paper"
+              : "bg-transparent text-muted hover:text-ink",
           )}
         >
           {l}
@@ -68,8 +73,8 @@ export function Navbar() {
         // Figma: 72px tall, 1px bottom border, sits on the page ground.
         "sticky top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300 ease-[var(--ease-brand)]",
         scrolled
-          ? "border-b border-ink/10 bg-ground/85 backdrop-blur-md"
-          : "border-b border-ink/10 bg-ground",
+          ? "border-b border-hairline bg-ground/85 backdrop-blur-md"
+          : "border-b border-transparent bg-ground",
       )}
     >
       {/* subtle shrink once you start scrolling */}
@@ -96,7 +101,7 @@ export function Navbar() {
         <nav className="hidden items-center gap-7 lg:flex">
           <Link
             href="/#open-positions"
-            className="link-underline font-display text-[20px] leading-[1.4] text-ink transition-colors duration-200 ease-out hover:text-orange"
+            className="link-underline font-display text-[15px] tracking-[0.02em] leading-none text-ink transition-colors duration-300 ease-out hover:text-orange"
           >
             Careers
           </Link>
@@ -129,13 +134,13 @@ export function Navbar() {
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             className="lg:hidden"
           >
-            <Container className="flex flex-col gap-1 border-t border-ink/10 pb-6 pt-2">
+            <Container className="flex flex-col gap-1 border-t border-hairline pb-8 pt-2">
               {LINKS.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="border-b border-ink/10 py-4 font-display text-[22px] text-ink transition-colors hover:text-orange"
+                  className="border-b border-hairline py-5 font-display text-[18px] tracking-[0.02em] text-ink transition-colors hover:text-orange"
                 >
                   {l.label}
                 </Link>

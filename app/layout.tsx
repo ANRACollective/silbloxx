@@ -47,9 +47,10 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${body.variable} h-full antialiased`}
     >
-      <body className="grain relative min-h-full bg-paper text-ink">
-        {children}
-      </body>
+      {/* No `bg-paper`/`text-ink` here: white fought the #F9F9F9 ground the
+          grain layer paints, and `text-ink` forced pure black onto everything
+          inheriting from body, overriding the ink hierarchy set in globals. */}
+      <body className="grain relative min-h-full">{children}</body>
     </html>
   );
 }

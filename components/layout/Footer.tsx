@@ -12,9 +12,7 @@ const YEAR = 2026;
 
 function ColHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="font-display text-[17px] tracking-[-0.01em] text-ink">
-      {children}
-    </h3>
+    <h3 className="label">{children}</h3>
   );
 }
 
@@ -43,13 +41,15 @@ export function Footer() {
       {/* yellow radial wash rising from the lower edge */}
       <div className="wash-yellow pointer-events-none absolute inset-x-0 bottom-0 h-[60%]" />
 
-      <Container className="relative pb-10 pt-14 lg:pt-16">
+      <Container className="relative pb-12 pt-16 lg:pt-24">
         {/* top rule */}
-        <div className="h-[6px] w-full bg-ink" />
+        {/* A 6px slab is a lot of weight for a divider; a hairline does the
+            same structural job without shouting. */}
+        <div className="h-px w-full bg-[color:var(--color-hairline-strong)]" />
 
         {/* columns */}
-        <div className="relative mt-12 grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1fr_1fr_1.5fr] lg:gap-x-10">
-          <div className="space-y-3 text-[14px] leading-relaxed text-muted">
+        <div className="relative mt-14 grid grid-cols-2 gap-x-8 gap-y-14 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1fr_1fr_1.5fr] lg:gap-x-12">
+          <div className="space-y-3 text-[15px] leading-[1.7] text-body">
             <ColHeading>Head Office</ColHeading>
             <p>
               Silbloxx HQ — Belgium
@@ -62,7 +62,7 @@ export function Footer() {
             <p>+32 11 00 00 00</p>
           </div>
 
-          <div className="space-y-3 text-[14px] leading-relaxed text-muted">
+          <div className="space-y-3 text-[15px] leading-[1.7] text-body">
             <ColHeading>Asia Sales Office</ColHeading>
             <p>
               75 High Street
@@ -77,7 +77,7 @@ export function Footer() {
             <p>+65 0000 0000</p>
           </div>
 
-          <div className="space-y-3 text-[14px] leading-relaxed text-muted">
+          <div className="space-y-3 text-[15px] leading-[1.7] text-body">
             <ColHeading>Manufacturing</ColHeading>
             <p>
               An Khánh Ward
@@ -90,7 +90,7 @@ export function Footer() {
             <p>+84 28 0000 0000</p>
           </div>
 
-          <div className="space-y-3 text-[14px] text-muted">
+          <div className="space-y-3 text-[15px] text-body">
             <ColHeading>Follow Us</ColHeading>
             <ul className="space-y-3">
               {social.map(({ label, Icon, href }) => (
@@ -104,7 +104,7 @@ export function Footer() {
                     <span className="grid h-6 w-6 place-items-center">
                       <Icon width={20} height={20} />
                     </span>
-                    <span className="text-[14px] text-muted transition-colors group-hover:text-orange">
+                    <span className="text-[15px] transition-colors group-hover:text-orange">
                       {label}
                     </span>
                   </a>
@@ -114,7 +114,7 @@ export function Footer() {
           </div>
 
           <div className="col-span-2 max-w-[320px] space-y-5 sm:col-span-3 lg:col-span-1">
-            <p className="text-[15px] leading-relaxed text-muted">
+            <p className="measure text-[15px] leading-[1.7] text-body">
               Silbloxx Asia is part of the BRIAM Group — a Belgian industrial
               group active in food and feed infrastructure worldwide.
             </p>
@@ -148,13 +148,13 @@ export function Footer() {
         </div>
 
         {/* bottom bar */}
-        <div className="mt-10 flex flex-col gap-4 border-t border-ink/10 pt-6 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between lg:mt-8 lg:border-t-0 lg:pt-0">
+        <div className="mt-12 flex flex-col gap-4 border-t border-hairline pt-8 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© {YEAR} Silbloxx. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <Link href="#" className="underline-offset-2 hover:text-ink hover:underline">
+            <Link href="#" className="link-underline hover:text-ink">
               Privacy Policy
             </Link>
-            <Link href="#" className="underline-offset-2 hover:text-ink hover:underline">
+            <Link href="#" className="link-underline hover:text-ink">
               Cookies Policy
             </Link>
           </div>

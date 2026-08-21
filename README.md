@@ -102,6 +102,56 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   carrying the original brief's numbers. Client feedback (14.08) flagged these as
   pending accurate input; update `STATS` in `components/sections/About.tsx` when they land.
 
+## Refinement pass — quiet-luxury brief
+
+Brief: modernise toward a minimal, premium, "quiet luxury" register — restraint,
+whitespace, typography and proportion doing the work — while preserving brand,
+structure, content and functionality. Incremental refinement, not a rebuild.
+
+Audited first, then changed only what measured badly. Before → after:
+
+| | Before | After |
+|---|---|---|
+| Body alignment | justified (rivers) | ragged right |
+| Hero measure | 85 char/line | 69 |
+| Positions subtitle measure | 146 char/line | 69 |
+| Body leading | 1.5 | 1.65–1.7 |
+| Orange on screen | 6 blocks, ~63,000px² | 1 block, ~9,000px² |
+| Border weights | 1/4/6/12/16px (4px ×16) | hairlines (1px ×36) |
+| Section rhythm | 80/80/80/112 | 120 desktop / 72 mobile |
+| Card/column titles | 32px | 24px |
+
+**Ink hierarchy.** The design specs pure black for everything. Body now sits at
+`#232323` and secondary/meta at `#6f6f6f`, with pure black reserved for display
+type and structural rules — which is what gives the headings their authority.
+
+**Three border tokens, deliberately.** `--color-hairline` (0.13) for decorative
+edges and dividers; `--color-hairline-strong` (0.28) for hover/emphasis;
+**`--color-line` (0.45) for interactive boundaries** — form fields, outline
+buttons, pager controls. That last one exists because WCAG 1.4.11 requires 3:1
+for a control's visible boundary and the decorative hairlines only reach ~2:1.
+Don't use hairline on a form field.
+
+**Colour discipline.** Orange marks the single primary action in a view (the hero
+CTA) plus inline links. Everything else is ink or hairline. The three full-width
+orange Apply buttons became one quiet text CTA per card, and the whole card is
+now the link — a *larger* hit area than the button it replaced, so the conversion
+path got easier, not harder.
+
+**Two bugs the audit surfaced:**
+
+1. `<body>` carried `bg-paper text-ink`, forcing white behind the grain ground and
+   pure black onto everything inheriting from it — which silently overrode the
+   entire ink hierarchy. Removed.
+2. Tailwind v4 **tree-shakes unused `@theme` keys**. Referencing tokens only via
+   arbitrary values (`text-[color:var(--color-body)]`) meant the variables were
+   never emitted and the colours silently fell back. Fixed by using generated
+   utilities (`text-body`, `border-hairline`) and `@theme static`.
+
+Deliberate departures from the Figma, agreed before starting: justified text,
+4px borders and the orange Apply buttons are all in the frame. Everything is in
+git if any single piece needs reverting.
+
 ## Feedback round — 21.08 (type, motion, logo)
 
 **The display font is in.** `public/fonts/DrukText-Medium.woff2`, wired via plain

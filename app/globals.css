@@ -23,7 +23,7 @@
  *  Silbloxx Asia — Design tokens
  *  Source of truth: Drive › Docs from SD › 03-brand-guidelines.md
  * ------------------------------------------------------------------ */
-@theme {
+@theme static {
   /* Colour — exact Figma variables (Primitives + Semantics)
      White #FFFFFF · Yellow #FFDC00 · Orange #FF2E00 · Grey #DAD9D6 · Black #000000 */
   --color-paper: #ffffff; /* Surface / OnPrimary / TextInverse */
@@ -32,7 +32,21 @@
   --color-yellow: #ffdc00; /* Yellow — Accent, radial wash, highlights */
   --color-yellow-soft: rgba(255, 220, 0, 0.2); /* Tag fill — 20% yellow (Figma) */
   --color-orange: #ff2e00; /* Orange — Primary CTAs, inline links, accents */
-  --color-muted: #000000; /* Body copy is TextPrimary black in the design */
+
+  /* Ink hierarchy. The design specs pure black for everything; at 18px over a
+     long paragraph that reads hard, so body copy sits a touch off-black and
+     secondary/meta text steps down again. Pure black stays reserved for
+     display type and the brand's structural rules — which is what gives the
+     headings their authority. */
+  --color-body: #232323; /* running text */
+  --color-muted: #6f6f6f; /* meta, captions, secondary */
+  --color-hairline: rgba(0, 0, 0, 0.13); /* dividers, card edges (decorative) */
+  --color-hairline-strong: rgba(0, 0, 0, 0.28); /* hover / emphasis edges */
+  /* Interactive boundaries — form fields, outline buttons, pager controls.
+     WCAG 1.4.11 wants 3:1 for the visible boundary of a control, and the
+     decorative hairlines above only reach ~2:1. This is the lightest value
+     that clears it (3.0:1 on both paper and the page ground). */
+  --color-line: rgba(0, 0, 0, 0.45);
 
   /* Page ground. Measured off the Figma frame export: the modal pixel value of
      every blank area on the page is 249 (#F9F9F9), not white — the frame carries
@@ -45,10 +59,12 @@
     system-ui, sans-serif;
   --font-body: var(--font-body), "Gruppo", system-ui, sans-serif;
 
-  /* Spacing tokens — Figma variables */
+  /* Spacing. The Figma runs 80 / 80 / 80 / 112 with no system behind it; a
+     single generous rhythm applied to every section is what makes a page feel
+     calm and deliberate rather than merely padded. */
   --spacing-page: 64px; /* page-padding/padding-global */
-  --spacing-section-md: 80px; /* section-padding/padding-section-medium */
-  --spacing-section-lg: 112px; /* section-padding/padding-section-large */
+  --spacing-section: 120px; /* desktop section rhythm */
+  --spacing-section-mobile: 72px;
 
   /* stroke/border-width — the design's heavy 4px rule */
   --stroke-brand: 4px;
@@ -71,10 +87,35 @@
 
   body {
     background-color: var(--color-ground);
-    color: var(--color-ink);
+    color: var(--color-body);
     font-family: var(--font-body);
+    font-size: 18px;
+    /* Gruppo is a light geometric face; it needs more air than a 1.5 default
+       to stay comfortable across a paragraph. */
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Ragged right everywhere. The frame specs justified text, but Gruppo's wide
+     word-spaces open visible rivers when justified — especially in the hero,
+     which was running to 85 characters a line. Even rag reads calmer and is
+     the norm in editorial typesetting. */
+  p {
+    text-align: left;
+    text-wrap: pretty;
+  }
+
+  /* Stop headings breaking to a single orphaned word. */
+  h1,
+  h2,
+  h3,
+  h4,
+  .h1,
+  .h2,
+  .h3,
+  .h4 {
+    text-wrap: balance;
   }
 
   ::selection {
@@ -185,6 +226,39 @@
     font-size: 0.8125rem;
     letter-spacing: 0.02em;
     line-height: 1.2;
+  }
+
+  /* Tracked micro-label — footer column headings, section eyebrows. Generous
+     letter-spacing at a small size is the quietest way to signal hierarchy
+     without adding weight, colour or a rule. */
+  .label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Measure caps. 60–75 characters is the comfortable range; the hero was at
+     85 and the positions subtitle at 146. */
+  .measure {
+    max-width: 62ch;
+  }
+  .measure-tight {
+    max-width: 46ch;
+  }
+
+  /* One rhythm for every section. */
+  .section {
+    padding-top: var(--spacing-section-mobile);
+    padding-bottom: var(--spacing-section-mobile);
+  }
+  @media (min-width: 1024px) {
+    .section {
+      padding-top: var(--spacing-section);
+      padding-bottom: var(--spacing-section);
+    }
   }
 }
 

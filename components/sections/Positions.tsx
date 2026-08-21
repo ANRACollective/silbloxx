@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { Tag } from "@/components/ui/Tag";
@@ -37,46 +38,59 @@ function Meta({
   children: React.ReactNode;
 }) {
   return (
-    <span className="inline-flex items-center gap-[6px] text-[18px] leading-[1.5] text-ink">
-      <Icon width={24} height={24} className="shrink-0 text-ink" />
+    <span className="inline-flex items-center gap-2 text-[15px] leading-[1.5] text-muted">
+      <Icon width={17} height={17} className="shrink-0" />
       {children}
     </span>
   );
 }
 
+/**
+ * Job card.
+ *
+ * Was: a 4px black box with a full-width orange button. Three of those in a row
+ * put ~63,000px² of saturated orange on one screen and made the section the
+ * loudest thing on the page.
+ *
+ * Now: a hairline surface, and the whole card is the link — a bigger hit area
+ * than the button it replaces, so the conversion path gets easier, not harder.
+ * The CTA is a quiet text cue whose rule and arrow animate on hover.
+ */
 function JobCard({ job }: { job: Job }) {
   return (
-    <div className="group flex min-w-px flex-1 flex-col items-start self-stretch border-[4px] border-ink bg-paper p-[22px] transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-1 hover:shadow-[0_16px_40px_-24px_rgba(0,0,0,0.5)]">
-      {/* justify-between keeps the Apply buttons on one line across the row
-          even when a job title wraps to two lines (the Figma mock uses three
-          identical cards, so this case doesn't show up there). */}
-      <div className="flex h-full w-full flex-col justify-between gap-6">
-        <div className="flex w-full flex-col gap-[6px]">
-          <div className="flex flex-col items-start justify-center">
-            <h3 className="h4 text-ink">{job.title}</h3>
-            <Tag>{job.team}</Tag>
-          </div>
-          <p className="w-full text-[18px] leading-[1.5] text-ink">
+    <Link
+      href={`/jobs/${job.slug}`}
+      aria-label={`${job.title} — view role and apply`}
+      className="group flex min-w-px flex-1 flex-col items-start self-stretch border border-hairline bg-paper p-8 transition-[border-color,box-shadow,transform] duration-500 ease-[var(--ease-brand)] hover:-translate-y-[2px] hover:border-hairline-strong hover:shadow-[0_18px_44px_-30px_rgba(0,0,0,0.45)]"
+    >
+      {/* justify-between keeps the CTA on one line across the row even when a
+          job title wraps to two lines. */}
+      <div className="flex h-full w-full flex-col justify-between gap-8">
+        <div className="flex w-full flex-col gap-3">
+          <Tag>{job.team}</Tag>
+          <h3 className="h5 text-ink">{job.title}</h3>
+          <p className="w-full text-[17px] leading-[1.7] text-body">
             {job.summary}
           </p>
         </div>
 
         <div className="flex w-full flex-col gap-6">
-          <div className="flex flex-wrap items-center gap-x-[22px] gap-y-2">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <Meta icon={ClockIcon}>{job.type}</Meta>
             <Meta icon={PinIcon}>{job.location}</Meta>
           </div>
-          <Button
-            href={`/jobs/${job.slug}`}
-            size="sm"
-            className="w-full"
-            aria-label={`Apply for ${job.title}`}
-          >
-            Apply Now
-          </Button>
+          <span className="inline-flex items-center gap-2 border-t border-hairline pt-5 font-display text-[15px] tracking-[0.02em] text-ink transition-colors duration-300 group-hover:border-line">
+            Apply now
+            <span
+              aria-hidden
+              className="transition-transform duration-500 ease-[var(--ease-brand)] group-hover:translate-x-1"
+            >
+              &rarr;
+            </span>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -86,7 +100,7 @@ function MobileList({ jobs }: { jobs: Job[] }) {
   const visible = expanded ? jobs : jobs.slice(0, MOBILE_INITIAL);
 
   return (
-    <div className="flex flex-col gap-8 lg:hidden">
+    <div className="flex flex-col gap-6 lg:hidden">
       {visible.map((job) => (
         <JobCard key={job.slug} job={job} />
       ))}
@@ -113,7 +127,7 @@ function DesktopRow({ jobs }: { jobs: Job[] }) {
   const visible = jobs.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
 
   return (
-    <div className="hidden w-full flex-col gap-8 lg:flex">
+    <div className="hidden w-full flex-col gap-10 lg:flex">
       <AnimatePresence mode="wait">
         <motion.div
           key={page}
@@ -121,7 +135,7 @@ function DesktopRow({ jobs }: { jobs: Job[] }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: reduce ? 0 : -12 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="flex w-full items-stretch gap-8"
+          className="flex w-full items-stretch gap-6"
         >
           {visible.map((job) => (
             <JobCard key={job.slug} job={job} />
@@ -149,17 +163,17 @@ function DesktopRow({ jobs }: { jobs: Job[] }) {
 
 export function Positions({ jobs }: { jobs: Job[] }) {
   return (
-    <section id="open-positions" className="scroll-mt-24 overflow-hidden py-28">
-      <Container className="flex flex-col items-center gap-[42px]">
-        <Reveal className="flex w-full flex-col gap-3">
-          <h2 className="h1 text-ink">Find your place at SILBLOXX Asia</h2>
-          <p className="text-[18px] leading-[1.5] text-ink">
+    <section id="open-positions" className="section scroll-mt-24 overflow-hidden">
+      <Container className="flex flex-col items-center gap-14">
+        <Reveal className="flex w-full flex-col gap-4">
+          <h2 className="h1 measure-tight text-ink">Find your place at SILBLOXX Asia</h2>
+          <p className="measure text-[18px] leading-[1.7] text-body">
             We&apos;re hiring across the new facility — {jobs.length} roles are
             open right now.
           </p>
         </Reveal>
 
-        <div className="flex w-full flex-col items-center gap-8">
+        <div className="flex w-full flex-col items-center gap-10">
           <MobileList jobs={jobs} />
           <DesktopRow jobs={jobs} />
         </div>

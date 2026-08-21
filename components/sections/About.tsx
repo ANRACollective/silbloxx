@@ -23,17 +23,15 @@ const STATS = [
 
 function StatGrid() {
   return (
-    <RevealGroup as="div" className="mt-10 grid grid-cols-2 gap-x-8 gap-y-9">
+    <RevealGroup as="div" className="mt-14 grid grid-cols-2 gap-x-10 gap-y-12">
       {STATS.map((s) => (
         <motion.div key={s.label} variants={revealItem}>
-          <div className="font-display text-[34px] leading-[1.3] text-ink lg:text-[40px]">
+          <div className="font-display text-[30px] leading-[1.15] text-ink lg:text-[36px]">
             {/* counts only where there's a leading number — "ISO 9001" and
                 "Q4 2026" render untouched */}
             <CountUp value={s.value} />
           </div>
-          <div className="mt-3 font-display text-[18px] leading-[1.4] text-ink">
-            {s.label}
-          </div>
+          <div className="label mt-4">{s.label}</div>
         </motion.div>
       ))}
     </RevealGroup>
@@ -42,14 +40,14 @@ function StatGrid() {
 
 export function About() {
   return (
-    <section className="scroll-mt-24 py-20">
+    <section className="section scroll-mt-24">
       {/* Figma About (node 10230:684): two columns, 80px gap, no eyebrow. */}
-      <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20">
+      <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-24">
         <Reveal>
-          <h2 className="h1 max-w-[768px] text-ink">
+          <h2 className="h1 measure-tight text-ink">
             Decades of experience. A new chapter in Vietnam.
           </h2>
-          <p className="mt-6 max-w-[500px] text-justify text-[18px] leading-[1.5] text-ink">
+          <p className="measure mt-7 text-[18px] leading-[1.7] text-body">
             For decades, Silbloxx has supplied modular silo systems to projects
             across Europe, Asia, and Africa. Our new facility in Ho Chi Minh City
             adds to that footprint, bringing production closer to our customers

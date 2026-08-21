@@ -101,7 +101,7 @@ export function ApplyForm({
   const errorCount = Object.keys(errors).length;
 
   return (
-    <div className="border border-ink bg-paper p-6 lg:p-8">
+    <div className="border border-hairline bg-paper p-7 lg:p-9">
       <AnimatePresence mode="wait">
         {sent ? (
           <motion.div
@@ -114,7 +114,7 @@ export function ApplyForm({
               <ArrowUpRight width={22} height={22} />
             </div>
             <h3 className="h5 mt-5 text-ink">Application received.</h3>
-            <p className="mx-auto mt-3 max-w-[320px] text-[15px] leading-[1.5] text-muted">
+            <p className="mx-auto mt-4 max-w-[320px] text-[16px] leading-[1.65] text-body">
               Thanks — your application for {roleTitle} is in. Our People team
               will be in touch shortly with a fast, discreet follow-up.
             </p>
@@ -143,10 +143,10 @@ export function ApplyForm({
             </div>
 
             <div>
-              <h3 className="font-display text-[20px] leading-none tracking-[-0.01em] text-ink">
+              <h3 className="font-display text-[20px] leading-[1.3] text-ink">
                 Interested in this opportunity?
               </h3>
-              <p className="mt-3 text-[15px] leading-[1.5] text-muted">
+              <p className="mt-3 text-[16px] leading-[1.65] text-body">
                 Send us your CV and a short note. You can expect a fast and
                 discreet follow-up.
               </p>
@@ -253,18 +253,18 @@ export function ApplyForm({
                 aria-describedby={errors.file ? id("file-err") : undefined}
                 onClick={() => fileRef.current?.click()}
                 className={cn(
-                  "flex w-full items-center justify-center border px-4 py-3 font-display text-[14px] text-ink transition-colors hover:bg-ink hover:text-paper",
-                  errors.file ? "border-orange" : "border-ink",
+                  "flex w-full items-center justify-center border px-4 py-3.5 font-display text-[15px] tracking-[0.02em] text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-paper",
+                  errors.file ? "border-orange" : "border-line",
                 )}
               >
                 {file ? file.name : "Upload"}
               </button>
-              <p className="mt-1.5 text-[12px] text-muted">PDF, max 5MB.</p>
+              <p className="mt-2 text-[13px] text-muted">PDF, max 5MB.</p>
               <FieldError show={errors.file} field="file" errId={id("file-err")} />
             </div>
 
             {/* consent (required per brief) */}
-            <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-[1.5] text-muted">
+            <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-[1.6] text-muted">
               <input
                 type="checkbox"
                 checked={consent}
@@ -275,8 +275,8 @@ export function ApplyForm({
                   setErrors((x) => ({ ...x, consent: false }));
                 }}
                 className={cn(
-                  "mt-0.5 h-4 w-4 shrink-0 appearance-none border bg-paper checked:bg-orange",
-                  errors.consent ? "border-orange" : "border-ink",
+                  "mt-0.5 h-[18px] w-[18px] shrink-0 appearance-none border bg-paper transition-colors checked:border-ink checked:bg-ink",
+                  errors.consent ? "border-orange" : "border-line",
                 )}
               />
               <span>
@@ -292,7 +292,7 @@ export function ApplyForm({
 
             <button
               type="submit"
-              className="w-full bg-orange px-6 py-3.5 font-display text-[15px] text-paper transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-10px_rgba(255,46,0,0.6)]"
+              className="w-full bg-orange px-6 py-4 font-display text-[16px] tracking-[0.02em] text-paper transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-[2px] hover:shadow-[0_12px_28px_-14px_rgba(255,46,0,0.65)]"
             >
               Submit application
             </button>

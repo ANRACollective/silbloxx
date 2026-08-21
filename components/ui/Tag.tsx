@@ -16,7 +16,10 @@ export function Tag({
   return (
     <span
       className={cn(
-        "inline-flex items-start bg-yellow-soft py-[4px] font-display text-[20px] leading-[1.4] text-ink",
+        // Stepped down from a 20px display label on a yellow wash to a small
+        // tracked label. At 20px it read as a second headline competing with
+        // the job title directly above it.
+        "label inline-flex items-center text-ink/70",
         className,
       )}
     >

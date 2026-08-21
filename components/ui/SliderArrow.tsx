@@ -23,11 +23,13 @@ export function SliderArrow({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        // Figma SliderArrow: p 12 around a 24px icon, fully rounded.
-        "grid place-items-center rounded-full p-[12px] transition-[transform,background-color] duration-300 ease-[var(--ease-brand)]",
+        // Hairline circle rather than a filled orange disc — a pager control
+        // isn't the primary action on the page and shouldn't be coloured like
+        // one. Ink on hover gives it presence only when reached for.
+        "grid place-items-center rounded-full border p-[12px] transition-[border-color,color,background-color] duration-300 ease-[var(--ease-brand)]",
         disabled
-          ? "cursor-not-allowed bg-graybrand text-paper"
-          : "bg-orange text-paper hover:scale-105 active:scale-95",
+          ? "cursor-not-allowed border-hairline text-hairline-strong"
+          : "border-line text-ink hover:border-ink hover:bg-ink hover:text-paper",
         className,
       )}
     >

@@ -38,10 +38,10 @@ export function WhyWorkHere() {
   const reduce = useReducedMotion();
 
   return (
-    <section id="why" className="scroll-mt-24 overflow-hidden py-20">
-      <Container className="flex flex-col gap-8">
-        <Reveal className="w-full max-w-[768px]">
-          <h2 className="h1 text-ink">Why join (us) now?</h2>
+    <section id="why" className="section scroll-mt-24 overflow-hidden">
+      <Container className="flex flex-col gap-12">
+        <Reveal className="w-full">
+          <h2 className="h1 measure-tight text-ink">Why join (us) now?</h2>
         </Reveal>
 
         {/* Curtain wipe — the photo unmasks left to right as the band scrolls in.
@@ -76,17 +76,17 @@ export function WhyWorkHere() {
 
         <RevealGroup
           as="div"
-          className="flex flex-col gap-8 lg:flex-row lg:items-start"
+          className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16"
         >
           {REASONS.map((r) => (
             <motion.div
               key={r.title}
               variants={revealItem}
-              className="flex min-w-px flex-1 flex-col items-start border-l-[4px] border-ink px-[30px] py-[22px] lg:h-[300px]"
+              className="flex min-w-px flex-1 flex-col items-start border-l border-hairline-strong pl-8 lg:h-[280px]"
             >
-              <div className="flex w-full flex-col gap-4 text-ink">
-                <h3 className="h4">{r.title}</h3>
-                <p className="text-justify text-[18px] leading-[1.5]">
+              <div className="flex w-full flex-col gap-4">
+                <h3 className="h5 text-ink">{r.title}</h3>
+                <p className="text-[17px] leading-[1.7] text-body">
                   {r.body}
                 </p>
               </div>
