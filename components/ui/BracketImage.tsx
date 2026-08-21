@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Bracket as BrandBracket } from "./Bracket";
 import { cn } from "@/lib/cn";
 
 type Corner = "tl" | "tr" | "bl" | "br";
@@ -18,8 +19,8 @@ export function BracketImage({
   corners = ["tr", "bl"],
   className,
   imgClassName,
-  bracket = 56,
-  thickness = 8,
+  bracket = 80,
+  thickness = 24.67,
   bracketColor = "var(--color-ink)",
   priority,
   placeholderLabel,
@@ -67,60 +68,32 @@ export function BracketImage({
       </div>
 
       {corners.map((c) => (
-        <Bracket
+        <span
           key={c}
-          corner={c}
-          size={bracket}
-          thickness={thickness}
-          color={bracketColor}
-        />
+          aria-hidden
+          className="pointer-events-none absolute"
+          style={{
+            width: bracket,
+            height: bracket,
+            ...(c.includes("t") ? { top: 0 } : { bottom: 0 }),
+            ...(c.includes("l") ? { left: 0 } : { right: 0 }),
+            // overhang the frame edge by the arm thickness, as in the design
+            ...(c.includes("t")
+              ? { marginTop: -thickness }
+              : { marginBottom: -thickness }),
+            ...(c.includes("l")
+              ? { marginLeft: -thickness }
+              : { marginRight: -thickness }),
+          }}
+        >
+          <BrandBracket
+            corner={c}
+            size={bracket}
+            color={bracketColor}
+            className="h-full w-full"
+          />
+        </span>
       ))}
-    </div>
-  );
-}
-
-function Bracket({
-  corner,
-  size,
-  thickness,
-  color,
-}: {
-  corner: Corner;
-  size: number;
-  thickness: number;
-  color: string;
-}) {
-  const off = -Math.round(thickness * 0.5);
-  const pos: Record<Corner, React.CSSProperties> = {
-    tl: { top: off, left: off },
-    tr: { top: off, right: off },
-    bl: { bottom: off, left: off },
-    br: { bottom: off, right: off },
-  };
-  const horiz: React.CSSProperties = {
-    position: "absolute",
-    width: size,
-    height: thickness,
-    background: color,
-    ...(corner.includes("t") ? { top: 0 } : { bottom: 0 }),
-    ...(corner.includes("l") ? { left: 0 } : { right: 0 }),
-  };
-  const vert: React.CSSProperties = {
-    position: "absolute",
-    width: thickness,
-    height: size,
-    background: color,
-    ...(corner.includes("t") ? { top: 0 } : { bottom: 0 }),
-    ...(corner.includes("l") ? { left: 0 } : { right: 0 }),
-  };
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute"
-      style={{ width: size, height: size, ...pos[corner] }}
-    >
-      <span style={horiz} />
-      <span style={vert} />
     </div>
   );
 }

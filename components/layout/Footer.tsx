@@ -38,7 +38,8 @@ const social = [
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-paper">
+    // transparent so the page's noise ground runs unbroken into the footer
+    <footer className="relative overflow-hidden">
       {/* yellow radial wash rising from the lower edge */}
       <div className="wash-yellow pointer-events-none absolute inset-x-0 bottom-0 h-[60%]" />
 

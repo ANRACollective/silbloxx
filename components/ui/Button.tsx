@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/cn";
 
 type Variant = "primary" | "secondary" | "dark" | "ghost";
-type Size = "md" | "lg";
+type Size = "sm" | "md" | "lg";
 
 const base =
   "group inline-flex items-center justify-center gap-2 font-display leading-none " +
@@ -10,14 +10,19 @@ const base =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange focus-visible:ring-offset-2 " +
   "focus-visible:ring-offset-paper will-change-transform select-none";
 
+/**
+ * Figma buttons: px 18 / py 12 with a Heading-6 label (Druk Text Medium
+ * 20px/1.4). `sm` is the in-card Apply Now variant (px 16 / py 8, full width).
+ */
 const sizes: Record<Size, string> = {
-  md: "px-6 py-3.5 text-[14px] tracking-[0.01em]",
-  lg: "px-7 py-4 text-[15px] tracking-[0.01em]",
+  sm: "px-[16px] py-[8px] text-[20px] leading-[1.4]",
+  md: "px-[18px] py-[12px] text-[20px] leading-[1.4]",
+  lg: "px-[18px] py-[12px] text-[20px] leading-[1.4]",
 };
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-orange text-paper hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-8px_rgba(255,46,0,0.55)] active:translate-y-0",
+    "border border-orange bg-orange text-paper hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-8px_rgba(255,46,0,0.55)] active:translate-y-0",
   secondary:
     "border border-ink text-ink bg-transparent hover:bg-ink hover:text-paper hover:-translate-y-0.5 active:translate-y-0",
   dark: "bg-ink text-paper hover:-translate-y-0.5 hover:bg-[#1b1b1b] active:translate-y-0",

@@ -1,21 +1,23 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/Button";
-import { BracketImage } from "@/components/ui/BracketImage";
+import { Container } from "@/components/layout/Container";
 import { Reveal, RevealGroup, revealItem } from "@/components/ui/Reveal";
 
 /**
- * "Why join us now?" — full-bleed dark band with a human portrait bleeding off
- * the leading edge, reasons set beside it.
+ * "Why join (us) now?" — rebuilt 1:1 from Figma `WhyWorkHere` (node 10230:11298).
  *
- * Client feedback (14.08): the previous white, numbered list read as dry and
- * sat too close to the job cards below. Inverting to black separates the two
- * blocks outright and gives the recruitment message a human anchor. The 01/02/03
- * numbering is gone so the section doesn't imply exactly three fixed reasons.
+ * Geometry from the design:
+ *   section     px 64, py 80; container gap 32
+ *   title       H1 56/1.2, max-w 768
+ *   image       full-width band, h 380, cropped (rendered at 230.29% height,
+ *               offset -30.52% => the visible band centres ~35% down the source)
+ *   row         gap 32; three flex-1 columns, h 300,
+ *               border-left 4px black (stroke/border-width), px 30 py 22
+ *   column      content gap 16; H4 32/1.3; body Gruppo 18/1.5 justified
  *
- * Photography: `why-portrait.jpg` is a dedicated slot — drop the approved shot
- * in at the same filename to swap it.
+ * Note this replaces the dark full-bleed band from the previous round — that was
+ * my interpretation of the client's note; this is what the designer actually drew.
  */
 const REASONS = [
   {
@@ -24,7 +26,7 @@ const REASONS = [
   },
   {
     title: "Global experience. Built locally.",
-    body: "We bring international engineering experience from four decades of silo projects, and we're building on Vietnamese manufacturing expertise to deliver it here. Both matter equally to how this plant runs.",
+    body: "Part of BRIAM Group — 40+ years of silo engineering behind us, a new manufacturing base in Southeast Asia in front of us. Global know-how, built by a local team. Nothing about this is a copy-paste of what's done elsewhere.",
   },
   {
     title: "Family-owned. Internationally minded.",
@@ -34,65 +36,42 @@ const REASONS = [
 
 export function WhyWorkHere() {
   return (
-    <section
-      id="why"
-      className="relative scroll-mt-24 overflow-hidden bg-ink text-paper"
-    >
-      {/* soft yellow depth from the lower-right, keeps the black from going flat */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.18]"
-        style={{
-          backgroundImage:
-            "radial-gradient(70% 60% at 100% 100%, var(--color-yellow) 0%, transparent 62%)",
-        }}
-      />
+    <section id="why" className="scroll-mt-24 overflow-hidden py-20">
+      <Container className="flex flex-col gap-8">
+        <Reveal className="w-full max-w-[768px]">
+          <h2 className="h1 text-ink">Why join (us) now?</h2>
+        </Reveal>
 
-      <div className="relative mx-auto grid w-full max-w-[1600px] items-stretch lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
-        {/* Portrait — bleeds off the leading edge */}
-        <div className="relative min-h-[420px] lg:min-h-[660px]">
-          <BracketImage
-            src="/images/why-portrait.jpg"
-            alt="Silbloxx Asia team member on the production floor"
-            corners={["tr"]}
-            bracket={72}
-            bracketColor="var(--color-yellow)"
-            className="absolute inset-0 h-full w-full"
-            placeholderLabel="Team portrait"
+        <Reveal className="relative h-[380px] w-full overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/why-team.jpg"
+            alt="Two Silbloxx Asia colleagues on the production floor at night"
+            className="h-full w-full object-cover object-[center_35%]"
+            loading="lazy"
           />
-        </div>
+        </Reveal>
 
-        {/* Reasons */}
-        <div className="flex items-center px-6 py-20 sm:px-10 lg:py-28 lg:pl-16 lg:pr-[72px]">
-          <div className="w-full max-w-[600px]">
-            <Reveal>
-              <p className="eyebrow text-yellow">Careers</p>
-              <h2 className="h2 mt-4 text-paper">Why join us now?</h2>
-            </Reveal>
-
-            <RevealGroup as="div" className="mt-12">
-              {REASONS.map((r, i) => (
-                <motion.div
-                  key={r.title}
-                  variants={revealItem}
-                  className={i > 0 ? "mt-9 border-t border-paper/20 pt-9" : ""}
-                >
-                  <h3 className="h5 text-paper">{r.title}</h3>
-                  <p className="mt-3 text-[16px] leading-[1.6] text-paper/70">
-                    {r.body}
-                  </p>
-                </motion.div>
-              ))}
-            </RevealGroup>
-
-            <Reveal className="mt-12">
-              <Button href="/#open-positions" size="lg">
-                View Open Positions
-              </Button>
-            </Reveal>
-          </div>
-        </div>
-      </div>
+        <RevealGroup
+          as="div"
+          className="flex flex-col gap-8 lg:flex-row lg:items-start"
+        >
+          {REASONS.map((r) => (
+            <motion.div
+              key={r.title}
+              variants={revealItem}
+              className="flex min-w-px flex-1 flex-col items-start border-l-[4px] border-ink px-[30px] py-[22px] lg:h-[300px]"
+            >
+              <div className="flex w-full flex-col gap-4 text-ink">
+                <h3 className="h4">{r.title}</h3>
+                <p className="text-justify text-[18px] leading-[1.5]">
+                  {r.body}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </RevealGroup>
+      </Container>
     </section>
   );
 }

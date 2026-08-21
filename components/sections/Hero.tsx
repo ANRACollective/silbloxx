@@ -1,46 +1,58 @@
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { BracketImage } from "@/components/ui/BracketImage";
+import { Bracket } from "@/components/ui/Bracket";
 import { Reveal } from "@/components/ui/Reveal";
 
 /**
- * Hero — recruitment-led headline + intro, over a three-photo collage.
+ * Hero — rebuilt 1:1 from Figma `Hero` (node 10220:794).
  *
- * Client feedback (14.08): imagery was too heavily weighted toward machines.
- * The collage now leads with people — the operator plate is the large primary
- * frame and `hero-team.jpg` is a dedicated human slot. Both are drop-in:
- * replace the files in /public/images keeping the same filenames.
+ * Geometry from the design:
+ *   section      px 64 (page-padding/padding-global), py 80 (padding-section-medium)
+ *   content      max-w 768, gap 32; heading/body gap 24
+ *   actions      gap 16; primary px18 py12, secondary fixed w-185
+ *   image row    gap 20 — left 270x330 bottom-aligned, centre flex-1 h-472
+ *                inset by py-106, right 270x360
+ *   brackets     two 80x80 L vectors, absolutely placed (left 42 / top 938,
+ *                and 83.33%+121 / top 285, the second rotated 180deg)
+ *
+ * Copy is the 14.08 client-approved wording, which is newer than this frame —
+ * the Figma still carries the pre-feedback headline.
+ * Photography stays as currently shipped, per instruction.
  */
 export function Hero() {
   return (
-    <section className="relative overflow-hidden pt-10 lg:pt-16">
+    <section className="relative overflow-hidden py-20">
       <Container>
-        <Reveal className="max-w-[760px]">
-          <h1 className="h1 text-ink">Build the future with us.</h1>
-          <p className="mt-7 max-w-[580px] text-[18px] leading-[1.5] text-muted">
-            SILBLOXX is expanding its manufacturing footprint in Vietnam. Backed
-            by BRIAM, a Belgian family-owned industrial group with decades of
-            experience in bulk storage, we are building a new production
-            operation and the team that will make it happen.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Button href="/#open-positions" size="lg">
-              View Open Positions
-            </Button>
-            <Button href="/#about" size="lg" variant="secondary">
+        <Reveal className="flex w-full max-w-[768px] flex-col gap-8">
+          <div className="flex flex-col gap-6">
+            <h1 className="h1 text-ink">Build the future with us.</h1>
+            <p className="text-justify text-[18px] leading-[1.5] text-ink">
+              SILBLOXX is expanding its manufacturing footprint in Vietnam.
+              Backed by BRIAM, a Belgian family-owned industrial group with
+              decades of experience in bulk storage, we are building a new
+              production operation and the team that will make it happen.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-start gap-4">
+            <Button href="/#open-positions">View Open Positions</Button>
+            <Button
+              href="/#about"
+              variant="secondary"
+              className="lg:w-[185px]"
+            >
               Learn More
             </Button>
           </div>
         </Reveal>
       </Container>
 
-      {/* Mobile: stacked photos — people first.
-          Corner brackets standardised to tr/bl on every frame (client 14.08). */}
+      {/* Mobile: photos stack */}
       <Container className="mt-12 space-y-6 lg:hidden">
         <BracketImage
           src="/images/hero-worker.jpg"
           alt="Silbloxx operator guiding a steel panel with a lifting chain"
-          corners={["tr", "bl"]}
+          corners={["bl"]}
           className="aspect-[4/5] w-full"
           placeholderLabel="Operator on the floor"
           priority
@@ -48,50 +60,62 @@ export function Hero() {
         <BracketImage
           src="/images/hero-team.jpg"
           alt="Silbloxx Asia production team at work on the shop floor"
-          corners={["tr", "bl"]}
+          corners={[]}
           className="aspect-[4/3] w-full"
           placeholderLabel="Production team"
         />
         <BracketImage
           src="/images/hero-welding-line.jpg"
           alt="Overhead view of an automated welding line assembling a silo panel"
-          corners={["tr", "bl"]}
+          corners={["tr"]}
           className="aspect-[16/10] w-full"
           placeholderLabel="Automated welding line"
         />
       </Container>
 
-      {/* Desktop: structured featured strip — operator plate leads */}
+      {/* Desktop: the design's three-plate row */}
       <Container className="mt-12 hidden lg:block">
         <Reveal>
-          <div className="grid h-[480px] grid-cols-12 gap-4">
-            <BracketImage
-              src="/images/hero-worker.jpg"
-              alt="Silbloxx operator guiding a steel panel with a lifting chain"
-              corners={["bl"]}
-              bracket={60}
-              className="col-span-6 h-full"
-              placeholderLabel="Operator on the floor"
-              priority
-            />
-            <BracketImage
-              src="/images/hero-team.jpg"
-              alt="Silbloxx Asia production team at work on the shop floor"
-              corners={[]}
-              className="col-span-3 h-full"
-              placeholderLabel="Production team"
-            />
+          <div className="flex w-full items-start gap-5">
+            <div className="flex shrink-0 items-end self-stretch">
+              <BracketImage
+                src="/images/hero-worker.jpg"
+                alt="Silbloxx operator guiding a steel panel with a lifting chain"
+                corners={[]}
+                className="h-[330px] w-[270px]"
+                placeholderLabel="Operator on the floor"
+                priority
+              />
+            </div>
+            <div className="flex min-w-px flex-1 items-start py-[106px]">
+              <BracketImage
+                src="/images/hero-team.jpg"
+                alt="Silbloxx Asia production team at work on the shop floor"
+                corners={[]}
+                className="h-[472px] w-full min-w-px flex-1"
+                placeholderLabel="Production team"
+              />
+            </div>
             <BracketImage
               src="/images/hero-welding-line.jpg"
               alt="Overhead view of an automated welding line assembling a silo panel"
-              corners={["tr"]}
-              bracket={60}
-              className="col-span-3 h-full"
+              corners={[]}
+              className="h-[360px] w-[270px] shrink-0"
               placeholderLabel="Automated welding line"
             />
           </div>
         </Reveal>
       </Container>
+
+      {/* Free-standing bracket accents (desktop only, as in the frame) */}
+      <Bracket
+        corner="bl"
+        className="absolute left-[42px] top-[938px] hidden text-ink lg:block"
+      />
+      <Bracket
+        corner="tr"
+        className="absolute left-[calc(83.33%+121px)] top-[285px] hidden text-ink lg:block"
+      />
 
       <span id="about" className="block h-0" />
     </section>

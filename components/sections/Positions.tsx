@@ -1,18 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { Tag } from "@/components/ui/Tag";
 import { Button } from "@/components/ui/Button";
 import { SliderArrow } from "@/components/ui/SliderArrow";
 import { Reveal } from "@/components/ui/Reveal";
-import { ClockIcon, PinIcon, CalendarIcon } from "@/components/ui/icons";
+import { ClockIcon, PinIcon } from "@/components/ui/icons";
 import type { Job } from "@/lib/jobs";
 
+/**
+ * Open positions — rebuilt 1:1 from Figma `Positions` (node 10230:11439).
+ *
+ * Geometry from the design:
+ *   section    px 64, py 112 (padding-section-large); container gap 42
+ *   title      gap 12; H1 56/1.2 + Gruppo 18/1.5 sub
+ *   content    gap 32; row gap 32, three flex-1 cards
+ *   card       4px black border, p 22, content gap 24, job gap 6
+ *   job title  H4 32/1.3 with the Tag stacked directly beneath it
+ *   info       gap 24; meta row gap 22, each item gap 6 with a 24px icon
+ *   apply      full-width orange button, px 16 py 8, Heading-6 label
+ *   actions    space-between; left arrow disabled, right arrow active
+ *
+ * Three cards per page, so the arrows page through the six live roles.
+ * Mobile keeps the vertical list + "View all" reveal the client asked for.
+ */
 const PER_PAGE = 3;
-/** Roles shown on mobile before the reveal button (client 14.08). */
 const MOBILE_INITIAL = 3;
 
 function Meta({
@@ -23,8 +37,8 @@ function Meta({
   children: React.ReactNode;
 }) {
   return (
-    <span className="inline-flex items-center gap-2 text-[14px] text-muted">
-      <Icon width={16} height={16} className="text-ink/70" />
+    <span className="inline-flex items-center gap-[6px] text-[18px] leading-[1.5] text-ink">
+      <Icon width={24} height={24} className="shrink-0 text-ink" />
       {children}
     </span>
   );
@@ -32,56 +46,53 @@ function Meta({
 
 function JobCard({ job }: { job: Job }) {
   return (
-    <Link
-      href={`/jobs/${job.slug}`}
-      className="group block border border-ink bg-paper p-6 transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-1 hover:shadow-[0_16px_40px_-24px_rgba(0,0,0,0.5)] lg:p-7"
-    >
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-        <div className="min-w-0 flex-1">
-          {/* Title and team tag sit on one baseline at every breakpoint —
-              the tag used to drop above the title on mobile (client 14.08). */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <h3 className="font-display text-[22px] leading-none tracking-[-0.01em] text-ink lg:text-[24px]">
-              {job.title}
-            </h3>
+    <div className="group flex min-w-px flex-1 flex-col items-start self-stretch border-[4px] border-ink bg-paper p-[22px] transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-1 hover:shadow-[0_16px_40px_-24px_rgba(0,0,0,0.5)]">
+      {/* justify-between keeps the Apply buttons on one line across the row
+          even when a job title wraps to two lines (the Figma mock uses three
+          identical cards, so this case doesn't show up there). */}
+      <div className="flex h-full w-full flex-col justify-between gap-6">
+        <div className="flex w-full flex-col gap-[6px]">
+          <div className="flex flex-col items-start justify-center">
+            <h3 className="h4 text-ink">{job.title}</h3>
             <Tag>{job.team}</Tag>
           </div>
-          <p className="mt-3 text-[15px] leading-[1.5] text-muted">
+          <p className="w-full text-[18px] leading-[1.5] text-ink">
             {job.summary}
           </p>
-          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-            <Meta icon={ClockIcon}>{job.type}</Meta>
-            <Meta icon={PinIcon}>{job.location}</Meta>
-            <Meta icon={CalendarIcon}>{job.posted}</Meta>
-          </div>
         </div>
 
-        <span className="inline-flex w-full items-center justify-center bg-orange px-6 py-3 font-display text-[14px] text-paper transition-transform duration-300 ease-[var(--ease-brand)] group-hover:-translate-y-0.5 lg:w-auto">
-          Apply Now
-        </span>
+        <div className="flex w-full flex-col gap-6">
+          <div className="flex flex-wrap items-center gap-x-[22px] gap-y-2">
+            <Meta icon={ClockIcon}>{job.type}</Meta>
+            <Meta icon={PinIcon}>{job.location}</Meta>
+          </div>
+          <Button
+            href={`/jobs/${job.slug}`}
+            size="sm"
+            className="w-full"
+            aria-label={`Apply for ${job.title}`}
+          >
+            Apply Now
+          </Button>
+        </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
-/** Mobile: one natural vertical scroll, first few roles then a reveal. */
+/** Mobile: vertical scroll, first three roles then a reveal (client 14.08). */
 function MobileList({ jobs }: { jobs: Job[] }) {
   const [expanded, setExpanded] = useState(false);
   const visible = expanded ? jobs : jobs.slice(0, MOBILE_INITIAL);
-  const remaining = jobs.length - MOBILE_INITIAL;
 
   return (
-    <div className="mt-12 lg:hidden">
-      <div className="space-y-6">
-        {visible.map((job) => (
-          <JobCard key={job.slug} job={job} />
-        ))}
-      </div>
-
-      {!expanded && remaining > 0 && (
-        <div className="mt-8 flex justify-center">
+    <div className="flex flex-col gap-8 lg:hidden">
+      {visible.map((job) => (
+        <JobCard key={job.slug} job={job} />
+      ))}
+      {!expanded && jobs.length > MOBILE_INITIAL && (
+        <div className="flex justify-center">
           <Button
-            size="lg"
             variant="secondary"
             onClick={() => setExpanded(true)}
             aria-label={`View all ${jobs.length} open positions`}
@@ -94,16 +105,15 @@ function MobileList({ jobs }: { jobs: Job[] }) {
   );
 }
 
-/** Desktop: paged carousel, unchanged. */
-function DesktopCarousel({ jobs }: { jobs: Job[] }) {
+/** Desktop: three across, paged. */
+function DesktopRow({ jobs }: { jobs: Job[] }) {
   const [page, setPage] = useState(0);
   const reduce = useReducedMotion();
   const pages = Math.ceil(jobs.length / PER_PAGE);
-  const start = page * PER_PAGE;
-  const visible = jobs.slice(start, start + PER_PAGE);
+  const visible = jobs.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
 
   return (
-    <div className="mx-auto mt-12 hidden max-w-[900px] lg:block">
+    <div className="hidden w-full flex-col gap-8 lg:flex">
       <AnimatePresence mode="wait">
         <motion.div
           key={page}
@@ -111,7 +121,7 @@ function DesktopCarousel({ jobs }: { jobs: Job[] }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: reduce ? 0 : -12 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-6"
+          className="flex w-full items-stretch gap-8"
         >
           {visible.map((job) => (
             <JobCard key={job.slug} job={job} />
@@ -120,23 +130,12 @@ function DesktopCarousel({ jobs }: { jobs: Job[] }) {
       </AnimatePresence>
 
       {pages > 1 && (
-        <div className="mt-8 flex items-center justify-between">
+        <div className="flex w-full items-start justify-between">
           <SliderArrow
             direction="left"
             disabled={page === 0}
             onClick={() => setPage((p) => Math.max(0, p - 1))}
           />
-          <div className="flex items-center gap-2">
-            {Array.from({ length: pages }).map((_, i) => (
-              <span
-                key={i}
-                className={
-                  "h-1.5 w-1.5 rounded-full transition-colors " +
-                  (i === page ? "bg-orange" : "bg-graybrand")
-                }
-              />
-            ))}
-          </div>
           <SliderArrow
             direction="right"
             disabled={page >= pages - 1}
@@ -150,18 +149,20 @@ function DesktopCarousel({ jobs }: { jobs: Job[] }) {
 
 export function Positions({ jobs }: { jobs: Job[] }) {
   return (
-    <section id="open-positions" className="scroll-mt-24 py-24 lg:py-28">
-      <Container>
-        <Reveal className="text-center">
-          <h2 className="h2 text-ink">Find your place at SILBLOXX Asia.</h2>
-          <p className="mx-auto mt-4 max-w-[520px] text-[16px] leading-[1.5] text-muted">
+    <section id="open-positions" className="scroll-mt-24 overflow-hidden py-28">
+      <Container className="flex flex-col items-center gap-[42px]">
+        <Reveal className="flex w-full flex-col gap-3">
+          <h2 className="h1 text-ink">Find your place at SILBLOXX Asia</h2>
+          <p className="text-[18px] leading-[1.5] text-ink">
             We&apos;re hiring across the new facility — {jobs.length} roles are
             open right now.
           </p>
         </Reveal>
 
-        <MobileList jobs={jobs} />
-        <DesktopCarousel jobs={jobs} />
+        <div className="flex w-full flex-col items-center gap-8">
+          <MobileList jobs={jobs} />
+          <DesktopRow jobs={jobs} />
+        </div>
       </Container>
     </section>
   );

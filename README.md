@@ -102,6 +102,54 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   carrying the original brief's numbers. Client feedback (14.08) flagged these as
   pending accurate input; update `STATS` in `components/sections/About.tsx` when they land.
 
+## Figma rebuild — LandingPage_Desktop (node 10219:43562)
+
+Rebuilt against the Figma file rather than by eye. Values below are the design's
+own variables, not estimates.
+
+| Token | Value |
+|---|---|
+| `page-padding/padding-global` | 64px |
+| `section-padding/padding-section-medium` | 80px |
+| `section-padding/padding-section-large` | 112px (Positions) |
+| `stroke/border-width` | 4px |
+| Heading 1 | Druk Text Medium 56 / 1.2 |
+| Heading 4 | Druk Text Medium 32 / 1.3 |
+| Heading 6 | Druk Text Medium 20 / 1.4 (all button labels) |
+| Text Medium | Gruppo Regular 18 / 1.5, justified |
+| Tag fill | `rgba(255,220,0,0.2)` |
+
+**The page ground is not white.** The frame carries a noise fill that neither the
+properties panel nor the MCP exposes — both report `#FFFFFF`. Measured off the
+lossless frame export, every blank area has a modal value of **249 (`#F9F9F9`)**
+with independent per-channel grain, σ≈2.5, spanning 242–253, and no structure
+(no grid, no dots — verified by amplifying a flat patch 25×). It's reproduced in
+`.grain` with `feTurbulence` + `feComponentTransfer`, calibrated against those
+numbers: the build measures mode 249, σ 2.46 — within one 8-bit level.
+
+Structural corrections made in this pass:
+
+- **Why join (us) now?** — heading, then a 380px full-width photo band, then three
+  columns each with a 4px black left rule. (The previous dark full-bleed band was
+  my interpretation of the client's note; this is what the designer drew.)
+- **Open positions** — three cards across, 4px borders, the team tag stacked
+  directly *beneath* the job title, full-width orange Apply Now, paging arrows
+  bottom-left/right. Mobile keeps the vertical list + "View all" reveal.
+- **Navbar** — "Careers" is plain black text, not a filled CTA.
+- **About** — no eyebrow; all four stats plain black.
+- **Brackets** — the real 80×80 vector L (arm thickness 24.67), not a hairline rule.
+- Page gutter 72px → 64px; heading letter-spacing → 0.
+
+Desktop page height comes out at 4350px against the frame's 4412px (1.4%).
+
+### Known gap: the display font
+
+The design uses **Druk Text Medium**; the build renders **Archivo Black**, which is
+much wider. Line breaks therefore differ from the mock — the About headline wraps
+to three lines here versus two in Figma. This is the single biggest remaining
+fidelity gap and it closes the moment the licensed `.woff2` is dropped in (see
+"Before go-live"). Nothing else needs to change.
+
 ## Client feedback round — 14.08
 
 Applied in full from *SILBLOXX — Client Feedback & Action Points*:

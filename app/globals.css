@@ -7,17 +7,30 @@
 @theme {
   /* Colour — exact Figma variables (Primitives + Semantics)
      White #FFFFFF · Yellow #FFDC00 · Orange #FF2E00 · Grey #DAD9D6 · Black #000000 */
-  --color-paper: #ffffff; /* Background / Surface / OnPrimary / TextInverse */
+  --color-paper: #ffffff; /* Surface / OnPrimary / TextInverse */
   --color-ink: #000000; /* Black — TextPrimary, Border, wordmark */
   --color-graybrand: #dad9d6; /* Grey — Disabled, quiet surfaces, dividers */
   --color-yellow: #ffdc00; /* Yellow — Accent, radial wash, highlights */
-  --color-yellow-soft: #fff2ad; /* pale tag fill (yellow tint) */
+  --color-yellow-soft: rgba(255, 220, 0, 0.2); /* Tag fill — 20% yellow (Figma) */
   --color-orange: #ff2e00; /* Orange — Primary CTAs, inline links, accents */
-  --color-muted: #4a4a4a; /* Gruppo body copy (reads soft against pure black) */
+  --color-muted: #000000; /* Body copy is TextPrimary black in the design */
 
-  /* Type — Druk Wide Bold (licensed) → Archivo Black sanctioned fallback */
+  /* Page ground. Measured off the Figma frame export: the modal pixel value of
+     every blank area on the page is 249 (#F9F9F9), not white — the frame carries
+     a noise fill that the properties panel doesn't surface. */
+  --color-ground: #f9f9f9;
+
+  /* Type — Druk Text Medium (licensed) → Archivo Black sanctioned fallback */
   --font-display: var(--font-display), "Archivo Black", system-ui, sans-serif;
   --font-body: var(--font-body), "Gruppo", system-ui, sans-serif;
+
+  /* Spacing tokens — Figma variables */
+  --spacing-page: 64px; /* page-padding/padding-global */
+  --spacing-section-md: 80px; /* section-padding/padding-section-medium */
+  --spacing-section-lg: 112px; /* section-padding/padding-section-large */
+
+  /* stroke/border-width — the design's heavy 4px rule */
+  --stroke-brand: 4px;
 
   /* Square by default */
   --radius-brand: 0px;
@@ -36,7 +49,7 @@
   }
 
   body {
-    background-color: var(--color-paper);
+    background-color: var(--color-ground);
     color: var(--color-ink);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
@@ -54,8 +67,8 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 400;
-    line-height: 0.98;
-    letter-spacing: -0.01em;
+    line-height: 1.2;
+    letter-spacing: 0; /* Figma: letterSpacing 0 on every heading style */
   }
 
   a {
@@ -90,7 +103,7 @@
   .h6 {
     font-family: var(--font-display);
     font-weight: 400;
-    letter-spacing: -0.02em;
+    letter-spacing: 0; /* Figma: letterSpacing 0 */
   }
   .h1 {
     font-size: 2.5rem;
@@ -154,31 +167,27 @@
  *  Brand utilities
  * ------------------------------------------------------------------ */
 @layer utilities {
-  /* Quiet-surface background motif: a soft, low-frequency grain (cloud-like,
-     not TV static) layered under a barely-there blueprint grid. Both stay
-     crisp at any viewport size and sit behind all content. */
+  /* Page ground — the Figma frame's noise fill, reproduced.
+   *
+   * Measured from the lossless 1440x4412 frame export: every blank area has a
+   * modal pixel value of 249 (#F9F9F9) with independent per-channel grain,
+   * sigma ~2.5, spanning roughly 242-253. It is 1px grain with no structure —
+   * no grid, no dots (verified by amplifying a flat patch 25x).
+   *
+   * feTurbulence gives per-channel independent noise for free; feComponentTransfer
+   * then compresses its 0-1 output into that narrow band around 249, so the layer
+   * is opaque and needs no blending. It sits behind content (z-index 0), which
+   * keeps photographs clean — the grain is on the page, not over the imagery.
+   */
   .grain::before {
     content: "";
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background-image: url("/images/bg-iridescent.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-
-  .grain::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image:
-      linear-gradient(to right, rgba(8, 8, 8, 0.028) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(8, 8, 8, 0.028) 1px, transparent 1px);
-    background-size: 120px 120px;
+    background-color: var(--color-ground);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.0907' intercept='0.9303'/%3E%3CfeFuncG type='linear' slope='0.0907' intercept='0.9303'/%3E%3CfeFuncB type='linear' slope='0.0907' intercept='0.9303'/%3E%3CfeFuncA type='discrete' tableValues='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
   }
 
   /* Keep real content above the background layers */

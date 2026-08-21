@@ -4,13 +4,20 @@ import { motion } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { BracketImage } from "@/components/ui/BracketImage";
 import { Reveal, RevealGroup, revealItem } from "@/components/ui/Reveal";
-import { cn } from "@/lib/cn";
 
+/**
+ * Factory facts. Still the original brief's numbers — the client flagged these
+ * as pending accurate input (feedback 14.08).
+ *
+ * All four are plain black in the design; the yellow "Q4 2026" treatment from
+ * the earlier round isn't in the Figma, and black also resolves the 1.36:1
+ * legibility problem yellow-on-ground had.
+ */
 const STATS = [
-  { value: "8.4 ha", label: "Site area", accent: false },
-  { value: "120+", label: "Local roles at full capacity", accent: false },
-  { value: "Q4 2026", label: "First line online", accent: true },
-  { value: "ISO 9001", label: "Quality target, year one", accent: false },
+  { value: "8.4 ha", label: "Site area" },
+  { value: "120+", label: "Local roles at full capacity" },
+  { value: "Q4 2026", label: "First line online" },
+  { value: "ISO 9001", label: "Quality target, year one" },
 ];
 
 function StatGrid() {
@@ -18,19 +25,12 @@ function StatGrid() {
     <RevealGroup as="div" className="mt-10 grid grid-cols-2 gap-x-8 gap-y-9">
       {STATS.map((s) => (
         <motion.div key={s.label} variants={revealItem}>
-          {/* Brand rule: yellow is a *surface*, never a text colour on white
-              (yellow-on-white measures 1.36:1). The accent stat is therefore
-              black type on a yellow block. */}
-          <div
-            className={cn(
-              "font-display text-[34px] leading-none tracking-[-0.02em] text-ink lg:text-[40px]",
-              s.accent &&
-                "inline-block bg-yellow px-2.5 py-1.5 -ml-2.5 -mt-1.5",
-            )}
-          >
+          <div className="font-display text-[34px] leading-[1.3] text-ink lg:text-[40px]">
             {s.value}
           </div>
-          <div className="mt-3 font-display text-[15px] text-ink">{s.label}</div>
+          <div className="mt-3 font-display text-[18px] leading-[1.4] text-ink">
+            {s.label}
+          </div>
         </motion.div>
       ))}
     </RevealGroup>
@@ -39,14 +39,14 @@ function StatGrid() {
 
 export function About() {
   return (
-    <section className="scroll-mt-24 py-24 lg:py-32">
+    <section className="scroll-mt-24 py-20">
+      {/* Figma About (node 10230:684): two columns, 80px gap, no eyebrow. */}
       <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20">
         <Reveal>
-          <p className="eyebrow text-ink">About Us</p>
-          <h2 className="h2 mt-4 max-w-[520px] text-ink">
+          <h2 className="h1 max-w-[768px] text-ink">
             Decades of experience. A new chapter in Vietnam.
           </h2>
-          <p className="mt-6 max-w-[500px] text-[17px] leading-[1.55] text-muted">
+          <p className="mt-6 max-w-[500px] text-justify text-[18px] leading-[1.5] text-ink">
             For decades, Silbloxx has supplied modular silo systems to projects
             across Europe, Asia, and Africa. Our new facility in Ho Chi Minh City
             adds to that footprint, bringing production closer to our customers

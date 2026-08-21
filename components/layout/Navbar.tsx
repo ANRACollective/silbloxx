@@ -65,13 +65,14 @@ export function Navbar() {
   return (
     <header
       className={cn(
+        // Figma: 72px tall, 1px bottom border, sits on the page ground.
         "sticky top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300 ease-[var(--ease-brand)]",
         scrolled
-          ? "border-b border-ink/10 bg-paper/85 backdrop-blur-md"
-          : "border-b border-transparent bg-paper",
+          ? "border-b border-ink/10 bg-ground/85 backdrop-blur-md"
+          : "border-b border-ink/10 bg-ground",
       )}
     >
-      <Container className="flex h-16 items-center justify-between lg:h-[72px]">
+      <Container className="flex h-16 items-center justify-between lg:h-[72px] lg:py-0">
         <Link
           href="/"
           aria-label="Silbloxx Asia home"
@@ -82,10 +83,12 @@ export function Navbar() {
         </Link>
 
         {/* Desktop */}
+        {/* Figma Navbar (node 10219:38689): "Careers" is plain black text
+            beside the EN/VN toggle — not a filled CTA. */}
         <nav className="hidden items-center gap-7 lg:flex">
           <Link
             href="/#open-positions"
-            className="bg-orange px-5 py-2.5 font-display text-[14px] text-paper transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-8px_rgba(255,46,0,0.5)]"
+            className="font-display text-[20px] leading-[1.4] text-ink transition-colors duration-200 hover:text-orange"
           >
             Careers
           </Link>
