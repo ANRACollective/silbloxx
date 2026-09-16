@@ -6,9 +6,19 @@ type Size = "sm" | "md" | "lg";
 
 const base =
   "group inline-flex items-center justify-center gap-2 font-display leading-none " +
-  "transition-[transform,background-color,color,box-shadow,border-color] duration-300 ease-[var(--ease-brand)] " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange focus-visible:ring-offset-2 " +
-  "focus-visible:ring-offset-paper will-change-transform select-none";
+  "focus-visible:ring-offset-paper select-none";
+
+/**
+ * Hover animation is reserved for the job cards' Apply Now button
+ * (review 16.09: "restrict hover animations solely to Apply Now").
+ * Every other button only swaps colour on hover, with no motion.
+ * Tailwind v4's `hover:` variant is already scoped to
+ * `@media (hover: hover)`, so none of this fires on touch devices.
+ */
+const LIFT =
+  "transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] will-change-transform " +
+  "hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-8px_rgba(255,46,0,0.55)] active:translate-y-0";
 
 /**
  * Figma buttons: px 18 / py 12 with a Heading-6 label (Druk Text Medium
@@ -22,10 +32,10 @@ const sizes: Record<Size, string> = {
 
 const variants: Record<Variant, string> = {
   primary:
-    "border border-orange bg-orange text-paper hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-8px_rgba(255,46,0,0.55)] active:translate-y-0",
+    "border border-orange bg-orange text-paper",
   secondary:
-    "border border-ink text-ink bg-transparent hover:bg-ink hover:text-paper hover:-translate-y-0.5 active:translate-y-0",
-  dark: "bg-ink text-paper hover:-translate-y-0.5 hover:bg-[#1b1b1b] active:translate-y-0",
+    "border border-ink text-ink bg-transparent hover:bg-ink hover:text-paper",
+  dark: "bg-ink text-paper hover:bg-[#1b1b1b]",
   ghost: "text-ink px-0 py-0 hover:text-orange",
 };
 
@@ -35,6 +45,10 @@ type CommonProps = {
   className?: string;
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
+  /** Opt-in hover lift — only the job cards' Apply Now uses this. */
+  lift?: boolean;
+  /** Open `href` in a new tab (links out to silbloxx.com / briamgroup.com). */
+  external?: boolean;
   children: React.ReactNode;
 };
 
@@ -45,12 +59,16 @@ export function Button({
   className,
   iconLeft,
   iconRight,
+  lift,
+  external,
   children,
   ...rest
 }: CommonProps &
   ({ href: string } | { href?: undefined }) &
   React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const classes = cn(base, sizes[size], variants[variant], className);
+  const classes = cn(base, sizes[size], variants[variant], lift && LIFT, className);
+  // Accessible name must reach links too (the rest props only fit <button>).
+  const ariaLabel = rest["aria-label"];
   const inner = (
     <>
       {iconLeft}
@@ -59,9 +77,22 @@ export function Button({
     </>
   );
 
+  if (href && external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener"
+        aria-label={ariaLabel}
+        className={classes}
+      >
+        {inner}
+      </a>
+    );
+  }
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} aria-label={ariaLabel} className={classes}>
         {inner}
       </Link>
     );

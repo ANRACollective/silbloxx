@@ -4,23 +4,23 @@ import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { BracketImage } from "@/components/ui/BracketImage";
 import { Reveal } from "@/components/ui/Reveal";
-import { SplitHeading, Parallax } from "@/components/ui/motion";
+import { SplitHeading } from "@/components/ui/motion";
 
 /**
- * Hero — rebuilt 1:1 from Figma `Hero` (node 10220:794).
+ * Hero — Figma `Hero` (desktop node 10220:794, mobile 10220:33370).
  *
  * Geometry from the design:
- *   section      px 64 (page-padding/padding-global), py 80 (padding-section-medium)
+ *   section      px 64, py 80; container gap 48
  *   content      max-w 768, gap 32; heading/body gap 24
- *   actions      gap 16; primary px18 py12, secondary fixed w-185
- *   image row    gap 20 — left 270x330 bottom-aligned, centre flex-1 h-472
- *                inset by py-106, right 270x360
- *   brackets     two 80x80 L vectors, absolutely placed (left 42 / top 938,
- *                and 83.33%+121 / top 285, the second rotated 180deg)
+ *   actions      gap 16; primary px18 py12; two secondary buttons, fixed w-185
+ *   image row    gap 20, all three plates 472 tall:
+ *                silos 270 | engineers flex-1 | worker 270
+ *   brackets     bottom-left on the first plate, top-right on the last
  *
- * Copy is the 14.08 client-approved wording, which is newer than this frame —
- * the Figma still carries the pre-feedback headline.
- * Photography stays as currently shipped, per instruction.
+ * Copy and the two "Learn More" buttons follow the current Figma. The review
+ * (16.09) asked for the two to carry distinct labels — one goes to
+ * silbloxx.com, the other to the BRIAM Group site.
+ * No parallax: every photo on the page gets the same plain reveal (16.09).
  */
 export function Hero() {
   return (
@@ -38,18 +38,30 @@ export function Hero() {
               text="Build the future with us."
             />
             <Reveal delay={0.18}>
-              <p className="text-justify text-[18px] leading-[1.5] text-ink">
-                SILBLOXX is expanding its manufacturing footprint in Vietnam.
-                Backed by BRIAM, a Belgian family-owned industrial group with
-                decades of experience in bulk storage, we are building a new
-                production operation and the team that will make it happen.
+              <p className="text-left lg:text-justify text-[18px] leading-[1.5] text-ink">
+                Silbloxx Asia is the Vietnamese arm of Silbloxx. We are part of
+                an international industrial group, BRIAM, active in food and
+                feed infrastructure projects worldwide.
               </p>
             </Reveal>
           </div>
           <Reveal delay={0.28} className="flex flex-wrap items-start gap-4">
             <Button href="/#open-positions">View Open Positions</Button>
-            <Button href="/#about" variant="secondary" className="lg:w-[185px]">
-              Learn More
+            <Button
+              href="https://www.silbloxx.com/en/about-us"
+              external
+              variant="secondary"
+              className="flex-1 sm:w-[185px] sm:flex-none"
+            >
+              About SILBLOXX
+            </Button>
+            <Button
+              href="https://www.briamgroup.com/company"
+              external
+              variant="secondary"
+              className="flex-1 sm:w-[185px] sm:flex-none"
+            >
+              About BRIAM
             </Button>
           </Reveal>
         </div>
@@ -70,40 +82,34 @@ export function Hero() {
         />
       </Container>
 
-      {/* Desktop: one aligned strip, 2:1:1.
-          The Figma staggers these three plates at different heights and insets
-          the centre one; combined with per-image parallax that read as scattered
-          rather than composed, so they now sit on one baseline at equal height
-          with a single gentle parallax on the whole row. Brackets are attached
-          to the outer plates instead of floating free. */}
+      {/* Desktop: Figma image row — 270 | flex | 270, all 472 tall, gap 20. */}
       <Container className="mt-12 hidden lg:block">
         <Reveal>
-          <Parallax distance={28}>
-            <div className="flex h-[440px] w-full items-stretch gap-5">
-              <BracketImage
-                src="/images/hero-worker.jpg"
-                alt="Silbloxx operator guiding a steel panel with a lifting chain"
-                corners={["bl"]}
-                className="h-full min-w-px flex-[2]"
-                placeholderLabel="Operator on the floor"
-                priority
-              />
-              <BracketImage
-                src="/images/hero-team.jpg"
-                alt="Two Silbloxx Asia engineers checking a production machine"
-                corners={[]}
-                className="h-full min-w-px flex-1"
-                placeholderLabel="Production team"
-              />
-              <BracketImage
-                src="/images/hero-welding-line.jpg"
-                alt="Overhead view of an automated welding line assembling a silo panel"
-                corners={["tr"]}
-                className="h-full min-w-px flex-1"
-                placeholderLabel="Automated welding line"
-              />
-            </div>
-          </Parallax>
+          <div className="flex h-[472px] w-full items-stretch gap-5">
+            <BracketImage
+              src="/images/hero-silos.jpg"
+              alt="Aerial view of a row of Silbloxx steel silos with a technician on the catwalk"
+              corners={["bl"]}
+              className="h-full w-[270px] shrink-0"
+              placeholderLabel="Silos"
+              priority
+            />
+            <BracketImage
+              src="/images/hero-team.jpg"
+              alt="Two Silbloxx Asia engineers checking a production machine"
+              corners={[]}
+              className="h-full min-w-px flex-1"
+              placeholderLabel="Production team"
+              priority
+            />
+            <BracketImage
+              src="/images/hero-worker.jpg"
+              alt="Silbloxx operator guiding a steel panel with a lifting chain"
+              corners={["tr"]}
+              className="h-full w-[270px] shrink-0"
+              placeholderLabel="Operator on the floor"
+            />
+          </div>
         </Reveal>
       </Container>
 

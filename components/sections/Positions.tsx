@@ -72,6 +72,7 @@ function JobCard({ job }: { job: Job }) {
           <Button
             href={`/jobs/${job.slug}`}
             size="sm"
+            lift
             className="w-full"
             aria-label={`Apply for ${job.title}`}
           >
@@ -167,7 +168,7 @@ function NoOpenings() {
         <div className="flex min-w-px flex-1 flex-col gap-8 lg:self-stretch lg:justify-between">
           <Reveal className="flex w-full flex-col gap-3">
             <h2 className="h1 text-ink">No open positions right now</h2>
-            <p className="text-justify text-[18px] leading-[1.5] text-ink">
+            <p className="text-left lg:text-justify text-[18px] leading-[1.5] text-ink">
               We&apos;re always interested in meeting talented people. Submit
               your details and we&apos;ll be in touch when a suitable
               opportunity comes up.
@@ -179,7 +180,7 @@ function NoOpenings() {
               src="/images/no-openings.jpg"
               alt="Operator at the controls of a robotic welding line"
               loading="lazy"
-              className="h-full w-full object-cover object-[center_23%]"
+              className="photo-grade h-full w-full object-cover object-[center_23%]"
             />
           </Reveal>
         </div>

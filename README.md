@@ -101,6 +101,37 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   carrying the original brief's numbers. Client feedback (14.08) flagged these as
   pending accurate input; update `STATS` in `components/sections/About.tsx` when they land.
 
+## Review meeting — 16.09 (follow-up, Figma as the source)
+
+- **Copy follows the current Figma:** hero body ("Silbloxx Asia is the Vietnamese arm of
+  Silbloxx…"), About headline on two lines ("Decades of experience. / Now building in
+  Vietnam.") with the Figma body, and **"Why join now?"** (was "Why join (us) now?").
+  The Positions subline keeps our wording: the Figma cards there are still placeholders
+  (Hanoi, "Pick the role that fits you", which the client rejected on 14.08).
+- **Two separately labelled links out** (Figma has two secondary buttons in the hero):
+  **About SILBLOXX** → `https://www.silbloxx.com/en/about-us`, **About BRIAM** →
+  `https://www.briamgroup.com/company`. Both open in a new tab. `Button` gained
+  `external`.
+- **Readability:** headings use `text-wrap: balance`, body copy `text-wrap: pretty`;
+  justified paragraphs are justified on desktop only (left-aligned on mobile, where
+  justification opened wide gaps).
+- **Stats are static** — the count-up is gone; 8.4 ha / 120+ / Q4 2026 / ISO 9001 render
+  as plain text.
+- **Photos share one treatment:** a light shared grade (`.photo-grade`: saturate 0.88,
+  contrast 1.06, brightness 1.01), no hover zoom, and the same fade-in reveal everywhere
+  (hero/About parallax and the Why-join curtain wipe removed). Desktop hero now matches
+  the Figma row: silos 270 | engineers | worker 270, all 472 tall
+  (`public/images/hero-silos.jpg` is new, from the Figma).
+- **Hover animation only on Apply Now:** `Button` has no motion by default; the job
+  cards pass `lift`. Slider arrows, the other buttons, form submit, back link and nav
+  link no longer move, and other buttons and links only change colour. Tailwind v4's
+  `hover:` is scoped to `@media (hover: hover)` and the custom `.link-underline` rule
+  is too, so touch devices get no hover effects.
+- **No-openings form = general application:** added a required CV upload (PDF, 5 MB)
+  and the data-processing consent, matching the apply form.
+- Fixed: `aria-label` on link buttons (e.g. "Apply for Production Supervisor") was being
+  dropped.
+
 ## Feedback round — 16.09 (boss review)
 
 Figma (`LandingPage_Desktop` 10219:43562, `LandingPage_Mobile` 10219:43563) used as the

@@ -50,7 +50,9 @@ export function BracketImage({
             loading={priority ? "eager" : "lazy"}
             onError={() => setFailed(true)}
             className={cn(
-              "h-full w-full object-cover transition-transform duration-[900ms] ease-[var(--ease-brand)] hover:scale-[1.04]",
+              // Same treatment for every photo (review 16.09): shared colour
+              // grade, no hover zoom.
+              "photo-grade h-full w-full object-cover",
               imgClassName,
             )}
           />

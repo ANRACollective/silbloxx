@@ -84,7 +84,7 @@ export function Navbar() {
         <Link
           href="/"
           aria-label="Silbloxx Asia home"
-          className="text-ink transition-opacity duration-200 ease-out hover:opacity-70"
+          className="text-ink"
         >
           {/* size = mark height (the vector stands 1em tall) */}
           <Wordmark className="text-[16px] lg:text-[19px]" />
@@ -96,7 +96,7 @@ export function Navbar() {
         <nav className="hidden items-center gap-7 lg:flex">
           <Link
             href="/#open-positions"
-            className="link-underline font-display text-[20px] leading-[1.4] text-ink transition-colors duration-200 ease-out hover:text-orange"
+            className="link-underline font-display text-[20px] leading-[1.4] text-ink hover:text-orange"
           >
             Careers
           </Link>
@@ -135,7 +135,7 @@ export function Navbar() {
                   key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="border-b border-ink/10 py-4 font-display text-[22px] text-ink transition-colors hover:text-orange"
+                  className="border-b border-ink/10 py-4 font-display text-[22px] text-ink hover:text-orange"
                 >
                   {l.label}
                 </Link>

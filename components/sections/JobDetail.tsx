@@ -96,12 +96,11 @@ export function JobDetail({ job }: { job: Job }) {
         <Reveal>
           <Link
             href="/#open-positions"
-            className="group inline-flex items-center gap-2 border border-ink px-4 py-2.5 font-display text-[14px] text-ink transition-colors duration-300 ease-[var(--ease-brand)] hover:bg-ink hover:text-paper"
+            className="group inline-flex items-center gap-2 border border-ink px-4 py-2.5 font-display text-[14px] text-ink hover:bg-ink hover:text-paper"
           >
             <ArrowLeft
               width={18}
               height={18}
-              className="transition-transform duration-300 ease-[var(--ease-brand)] group-hover:-translate-x-0.5"
             />
             Back to all jobs
           </Link>

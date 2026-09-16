@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { BracketImage } from "@/components/ui/BracketImage";
 import { Reveal, RevealGroup, revealItem } from "@/components/ui/Reveal";
-import { CountUp, Parallax } from "@/components/ui/motion";
 
 /**
  * Factory facts. Still the original brief's numbers — the client flagged these
@@ -27,9 +26,8 @@ function StatGrid() {
       {STATS.map((s) => (
         <motion.div key={s.label} variants={revealItem}>
           <div className="font-display text-[34px] leading-[1.3] text-ink lg:text-[40px]">
-            {/* counts only where there's a leading number — "ISO 9001" and
-                "Q4 2026" render untouched */}
-            <CountUp value={s.value} />
+            {/* Static (review 16.09): data points and codes don't animate. */}
+            {s.value}
           </div>
           <div className="mt-3 font-display text-[18px] leading-[1.4] text-ink">
             {s.label}
@@ -47,20 +45,21 @@ export function About() {
       <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20">
         <Reveal>
           <h2 className="h1 max-w-[768px] text-ink">
-            Decades of experience. A new chapter in Vietnam.
+            Decades of experience.
+            <br />
+            Now building in Vietnam.
           </h2>
-          <p className="mt-6 max-w-[500px] text-justify text-[18px] leading-[1.5] text-ink">
+          <p className="mt-6 max-w-[500px] text-left lg:text-justify text-[18px] leading-[1.5] text-ink">
             For decades, Silbloxx has supplied modular silo systems to projects
             across Europe, Asia, and Africa. Our new facility in Ho Chi Minh City
-            adds to that footprint, bringing production closer to our customers
-            across Asia and the wider region.
+            brings production closer to our customers across Asia and the wider
+            region.
           </p>
           <StatGrid />
         </Reveal>
 
         <Reveal delay={0.1}>
-          <Parallax distance={44}>
-            <BracketImage
+          <BracketImage
               src="/images/about-facility.jpg"
               alt="Silbloxx Asia silo facility at dusk in Ho Chi Minh City"
               corners={["tr", "bl"]}
@@ -68,7 +67,6 @@ export function About() {
               className="aspect-[5/6] w-full lg:aspect-auto lg:h-[560px]"
               placeholderLabel="HCMC silo facility"
             />
-          </Parallax>
         </Reveal>
       </Container>
     </section>

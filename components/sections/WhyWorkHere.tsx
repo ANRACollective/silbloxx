@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { Reveal, RevealGroup, revealItem } from "@/components/ui/Reveal";
 
@@ -35,44 +35,24 @@ const REASONS = [
 ];
 
 export function WhyWorkHere() {
-  const reduce = useReducedMotion();
-
   return (
     <section id="why" className="scroll-mt-24 overflow-hidden py-20">
       <Container className="flex flex-col gap-8">
         <Reveal className="w-full max-w-[768px]">
-          <h2 className="h1 text-ink">Why join (us) now?</h2>
+          <h2 className="h1 text-ink">Why join now?</h2>
         </Reveal>
 
-        {/* Curtain wipe — the photo unmasks left to right as the band scrolls in.
-            Animating clip-path (not width) keeps the image itself perfectly
-            still underneath, so nothing squashes or reflows during the reveal.
-            The trigger sits on this wrapper, which is never clipped by an
-            ancestor — putting it on the clipped child would mean it never
-            registers as on-screen. */}
-        <motion.div
-          className="relative h-[380px] w-full overflow-hidden"
-          initial={reduce ? "show" : "hidden"}
-          whileInView="show"
-          viewport={{ once: true, margin: "-12% 0px" }}
-          variants={{
-            hidden: { clipPath: "inset(0 100% 0 0)" },
-            show: {
-              clipPath: "inset(0 0% 0 0)",
-              transition: reduce
-                ? { duration: 0 }
-                : { duration: 1.05, ease: [0.16, 1, 0.3, 1] },
-            },
-          }}
-        >
+        {/* Same reveal as every other photo (review 16.09 — standardised image
+            treatment): a plain fade-rise, no curtain wipe. */}
+        <Reveal className="relative h-[380px] w-full overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/why-team.jpg"
             alt="Two Silbloxx Asia colleagues on the production floor at night"
-            className="h-full w-full object-cover object-[center_35%]"
+            className="photo-grade h-full w-full object-cover object-[center_35%]"
             loading="lazy"
           />
-        </motion.div>
+        </Reveal>
 
         <RevealGroup
           as="div"
@@ -86,7 +66,7 @@ export function WhyWorkHere() {
             >
               <div className="flex w-full flex-col gap-4 text-ink">
                 <h3 className="h4">{r.title}</h3>
-                <p className="text-justify text-[18px] leading-[1.5]">
+                <p className="text-left lg:text-justify text-[18px] leading-[1.5]">
                   {r.body}
                 </p>
               </div>

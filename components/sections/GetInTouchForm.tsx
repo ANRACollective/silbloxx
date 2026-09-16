@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Label, Input, Textarea } from "@/components/ui/form";
 import { Button } from "@/components/ui/Button";
 import { ArrowUpRight } from "@/components/ui/icons";
+import { cn } from "@/lib/cn";
 
 type Fields = {
   firstName: string;
@@ -29,7 +30,11 @@ const MESSAGES: Record<string, string> = {
   lastName: "Enter your last name.",
   email: "Enter a valid email address.",
   phone: "Enter a phone number we can reach you on.",
+  file: "Attach your CV as a PDF.",
+  consent: "Please accept the privacy statement to continue.",
 };
+
+const MAX_CV_BYTES = 5 * 1024 * 1024;
 
 /** Figma label: Gruppo 18/1.5, black. */
 const LABEL = "text-[18px] leading-[1.5] text-ink";
@@ -46,6 +51,9 @@ const LABEL = "text-[18px] leading-[1.5] text-ink";
  * Border is 4px rather than the Figma's 2px so it matches the job cards
  * (feedback 16.09 on the apply form, applied to both forms).
  *
+ * Review 16.09: this is a *general application* — so it also takes a CV
+ * (PDF, required) and the same data-processing consent as the apply form.
+ *
  * Front-end only, like the apply form: validates, then shows a success state.
  * Inputs carry `name` attributes so it can be wired to email/CRM at go-live.
  */
@@ -53,6 +61,9 @@ export function GetInTouchForm() {
   const [values, setValues] = useState<Fields>(EMPTY);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [sent, setSent] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [consent, setConsent] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
   const reduce = useReducedMotion();
 
   const set =
@@ -67,12 +78,17 @@ export function GetInTouchForm() {
     if (!values.lastName.trim()) errs.lastName = true;
     if (!emailOk(values.email)) errs.email = true;
     if (!values.phone.trim()) errs.phone = true;
+    if (!file) errs.file = true;
+    if (!consent) errs.consent = true;
     setErrors(errs);
     if (Object.keys(errs).length === 0) {
       setSent(true);
       return;
     }
-    document.getElementById(`git-${Object.keys(errs)[0]}`)?.focus();
+    const first = Object.keys(errs)[0];
+    document
+      .getElementById(`git-${first === "file" ? "cvTrigger" : first}`)
+      ?.focus();
   };
 
   const field = (
@@ -156,6 +172,77 @@ export function GetInTouchForm() {
                   onChange={set("message")}
                   className="h-[180px] p-3 text-[16px] placeholder:text-ink/60"
                 />
+              </div>
+
+              {/* CV upload — same control as the apply form */}
+              <div className="flex flex-col gap-2">
+                <Label required className={`mb-0 ${LABEL}`}>
+                  Upload your CV (PDF)
+                </Label>
+                <input
+                  ref={fileRef}
+                  id="git-cv"
+                  name="cv"
+                  type="file"
+                  accept="application/pdf"
+                  className="sr-only"
+                  tabIndex={-1}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0] ?? null;
+                    const ok = !!f && f.type === "application/pdf" && f.size <= MAX_CV_BYTES;
+                    setFile(ok ? f : null);
+                    setErrors((x) => ({ ...x, file: !!f && !ok }));
+                  }}
+                />
+                <button
+                  type="button"
+                  id="git-cvTrigger"
+                  aria-describedby={errors.file ? "git-file-err" : "git-cv-hint"}
+                  onClick={() => fileRef.current?.click()}
+                  className={cn(
+                    "flex h-12 w-full items-center justify-center border px-4 font-display text-[16px] text-ink hover:bg-ink hover:text-paper",
+                    errors.file ? "border-orange" : "border-ink",
+                  )}
+                >
+                  <span className="truncate">{file ? file.name : "Upload"}</span>
+                </button>
+                <p id="git-cv-hint" className="text-[12px] text-muted">
+                  PDF, max 5MB.
+                </p>
+                {errors.file && (
+                  <p id="git-file-err" className="text-[13px] leading-[1.4] text-ink">
+                    {MESSAGES.file}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-[1.5] text-muted">
+                  <input
+                    type="checkbox"
+                    id="git-consent"
+                    name="consent"
+                    checked={consent}
+                    aria-describedby={errors.consent ? "git-consent-err" : undefined}
+                    onChange={(e) => {
+                      setConsent(e.target.checked);
+                      setErrors((x) => ({ ...x, consent: false }));
+                    }}
+                    className={cn(
+                      "mt-0.5 h-4 w-4 shrink-0 appearance-none border bg-paper checked:bg-orange",
+                      errors.consent ? "border-orange" : "border-ink",
+                    )}
+                  />
+                  <span>
+                    I agree to Silbloxx Asia keeping my details and CV to contact
+                    me about future roles, in line with the privacy policy.
+                  </span>
+                </label>
+                {errors.consent && (
+                  <p id="git-consent-err" className="text-[13px] leading-[1.4] text-ink">
+                    {MESSAGES.consent}
+                  </p>
+                )}
               </div>
               <Button type="submit" size="sm" className="w-full">
                 Get in Touch

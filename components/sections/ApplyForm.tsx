@@ -254,7 +254,7 @@ export function ApplyForm({
                 aria-describedby={errors.file ? id("file-err") : undefined}
                 onClick={() => fileRef.current?.click()}
                 className={cn(
-                  "flex w-full items-center justify-center border px-4 py-3 font-display text-[14px] text-ink transition-colors hover:bg-ink hover:text-paper",
+                  "flex w-full items-center justify-center border px-4 py-3 font-display text-[14px] text-ink hover:bg-ink hover:text-paper",
                   errors.file ? "border-orange" : "border-ink",
                 )}
               >
@@ -293,7 +293,7 @@ export function ApplyForm({
 
             <button
               type="submit"
-              className="w-full bg-orange px-6 py-3.5 font-display text-[15px] text-paper transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-10px_rgba(255,46,0,0.6)]"
+              className="w-full bg-orange px-6 py-3.5 font-display text-[15px] text-paper"
             >
               Submit application
             </button>

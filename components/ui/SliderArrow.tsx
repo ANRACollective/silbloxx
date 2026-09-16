@@ -24,10 +24,10 @@ export function SliderArrow({
       onClick={onClick}
       className={cn(
         // Figma SliderArrow: p 12 around a 24px icon, fully rounded.
-        "grid place-items-center rounded-full p-[12px] transition-[transform,background-color] duration-300 ease-[var(--ease-brand)]",
+        "grid place-items-center rounded-full p-[12px]",
         disabled
           ? "cursor-not-allowed bg-graybrand text-paper"
-          : "bg-orange text-paper hover:scale-105 active:scale-95",
+          : "bg-orange text-paper",
         className,
       )}
     >
