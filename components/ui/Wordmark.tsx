@@ -145,7 +145,10 @@ export function Wordmark({
         className={cn("block shrink-0 border-current", stretch && "flex-1")}
         style={oStyle}
         initial={animates ? { flexGrow: 0 } : false}
-        whileInView={animates ? { flexGrow: 1 } : undefined}
+        // Always resolve to the stretched state when stretching: SSR renders
+        // with motion allowed (flexGrow 0), so reduced-motion clients must
+        // still be driven to flexGrow 1 — instantly, via the 0s transition.
+        whileInView={stretch ? { flexGrow: 1 } : undefined}
         viewport={{ once: true, margin: "-10% 0px" }}
         transition={
           animates

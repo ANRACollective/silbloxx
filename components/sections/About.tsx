@@ -42,7 +42,7 @@ function StatGrid() {
 
 export function About() {
   return (
-    <section className="scroll-mt-24 py-20">
+    <section className="scroll-mt-24 overflow-x-clip py-20">
       {/* Figma About (node 10230:684): two columns, 80px gap, no eyebrow. */}
       <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20">
         <Reveal>

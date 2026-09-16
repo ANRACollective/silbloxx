@@ -55,29 +55,18 @@ export function Hero() {
         </div>
       </Container>
 
-      {/* Mobile: photos stack */}
-      <Container className="mt-12 space-y-6 lg:hidden">
-        <BracketImage
-          src="/images/hero-worker.jpg"
-          alt="Silbloxx operator guiding a steel panel with a lifting chain"
-          corners={["bl"]}
-          className="aspect-[4/5] w-full"
-          placeholderLabel="Operator on the floor"
-          priority
-        />
+      {/* Mobile: a single photo (feedback 16.09 — "only 1 image, no need all
+          3"), per Figma LandingPage_Mobile › Hero (node 10220:33370): one
+          full-width plate 400px tall, 52px below the actions, with brackets
+          on the bottom-left and top-right corners. */}
+      <Container className="mt-[52px] lg:hidden">
         <BracketImage
           src="/images/hero-team.jpg"
-          alt="Silbloxx Asia production team at work on the shop floor"
-          corners={[]}
-          className="aspect-[4/3] w-full"
+          alt="Two Silbloxx Asia engineers checking a production machine"
+          corners={["bl", "tr"]}
+          className="h-[400px] w-full"
           placeholderLabel="Production team"
-        />
-        <BracketImage
-          src="/images/hero-welding-line.jpg"
-          alt="Overhead view of an automated welding line assembling a silo panel"
-          corners={["tr"]}
-          className="aspect-[16/10] w-full"
-          placeholderLabel="Automated welding line"
+          priority
         />
       </Container>
 
@@ -101,7 +90,7 @@ export function Hero() {
               />
               <BracketImage
                 src="/images/hero-team.jpg"
-                alt="Silbloxx Asia production team at work on the shop floor"
+                alt="Two Silbloxx Asia engineers checking a production machine"
                 corners={[]}
                 className="h-full min-w-px flex-1"
                 placeholderLabel="Production team"

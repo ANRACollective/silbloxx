@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { SliderArrow } from "@/components/ui/SliderArrow";
 import { Reveal } from "@/components/ui/Reveal";
 import { ClockIcon, PinIcon } from "@/components/ui/icons";
+import { GetInTouchForm } from "@/components/sections/GetInTouchForm";
 import type { Job } from "@/lib/jobs";
 
 /**
@@ -46,7 +47,9 @@ function Meta({
 
 function JobCard({ job }: { job: Job }) {
   return (
-    <div className="group flex min-w-px flex-1 flex-col items-start self-stretch border-[4px] border-ink bg-paper p-[22px] transition-[transform,box-shadow] duration-300 ease-[var(--ease-brand)] hover:-translate-y-1 hover:shadow-[0_16px_40px_-24px_rgba(0,0,0,0.5)]">
+    // No hover on the card itself — only the Apply Now button animates (boss
+    // feedback 16.09: card + button moving together was too much).
+    <div className="flex min-w-px flex-1 flex-col items-start self-stretch border-[4px] border-ink bg-paper p-[22px]">
       {/* justify-between keeps the Apply buttons on one line across the row
           even when a job title wraps to two lines (the Figma mock uses three
           identical cards, so this case doesn't show up there). */}
@@ -147,7 +150,49 @@ function DesktopRow({ jobs }: { jobs: Job[] }) {
   );
 }
 
+/**
+ * No openings — Figma `Positions` variant (node 10394:1290), shown when the
+ * job list is empty (feedback 16.09) so people can still get in touch.
+ *
+ *   section    px 64, py 112 (same shell as the listing)
+ *   container  row, gap 42; left column flex-1, justify-between
+ *   title      gap 12; H1 + Gruppo 18/1.5 justified
+ *   image      full column width x 300, cropped toward the upper third
+ *   form       see GetInTouchForm
+ */
+function NoOpenings() {
+  return (
+    <section id="open-positions" className="scroll-mt-24 overflow-hidden py-28">
+      <Container className="flex flex-col gap-[42px] lg:flex-row lg:items-start">
+        <div className="flex min-w-px flex-1 flex-col gap-8 lg:self-stretch lg:justify-between">
+          <Reveal className="flex w-full flex-col gap-3">
+            <h2 className="h1 text-ink">No open positions right now</h2>
+            <p className="text-justify text-[18px] leading-[1.5] text-ink">
+              We&apos;re always interested in meeting talented people. Submit
+              your details and we&apos;ll be in touch when a suitable
+              opportunity comes up.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1} className="h-[220px] w-full overflow-hidden sm:h-[300px]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/no-openings.jpg"
+              alt="Operator at the controls of a robotic welding line"
+              loading="lazy"
+              className="h-full w-full object-cover object-[center_23%]"
+            />
+          </Reveal>
+        </div>
+        <Reveal delay={0.15} className="w-full lg:w-auto">
+          <GetInTouchForm />
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
 export function Positions({ jobs }: { jobs: Job[] }) {
+  if (jobs.length === 0) return <NoOpenings />;
   return (
     <section id="open-positions" className="scroll-mt-24 overflow-hidden py-28">
       <Container className="flex flex-col items-center gap-[42px]">

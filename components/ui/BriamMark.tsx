@@ -1,24 +1,23 @@
 import { cn } from "@/lib/cn";
 
 /**
- * BRIAM Group lockup (parent group). Approximated angular "B" mark + wordmark,
- * recolours via currentColor. Swap for the official BRIAM asset when supplied.
+ * BRIAM Group logo — the official `BRIAM_Logo_Screen_Positive_RGB` vector,
+ * exported from the Figma footer (node 10219:43238), served from
+ * /public/brand/briam-logo.svg. Replaces the earlier hand-drawn approximation
+ * (feedback 16.09: "BRIAM logo incorrect in footer").
+ *
+ * Figma box is 123 x 39 with the artwork inset 0.62% left / 4.81% right,
+ * i.e. the artwork itself is 116.3 x 39.
  */
 export function BriamMark({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-2 text-ink", className)}>
-      <svg
-        viewBox="0 0 40 40"
-        className="h-full w-auto"
-        fill="currentColor"
-        aria-hidden
-      >
-        <path d="M4 4h17a10 10 0 0 1 6.4 17.7A11 11 0 0 1 20 40H4V22h15.5a3 3 0 0 0 0-6H4V4Zm7 7v4.5h8.5a2.25 2.25 0 0 0 0-4.5H11Zm0 15.5V33h8.5a3.25 3.25 0 0 0 0-6.5H11Z" />
-      </svg>
-      <span className="font-display text-[22px] leading-none tracking-[-0.02em]">
-        BRIAM
-        <sup className="ml-[1px] align-super text-[9px]">™</sup>
-      </span>
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/brand/briam-logo.svg"
+      alt="BRIAM Group"
+      width={116}
+      height={39}
+      className={cn("block h-[39px] w-auto", className)}
+    />
   );
 }

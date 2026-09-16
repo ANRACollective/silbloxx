@@ -77,7 +77,7 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   | File | Slot | Status |
   |---|---|---|
   | `hero-worker.jpg` | Hero, large primary plate | real photo |
-  | `hero-team.jpg` | Hero, third frame | **stand-in — needs a people shot** |
+  | `hero-team.jpg` | Hero, centre frame + the single mobile plate | real photo (from the Figma, 16.09) |
   | `hero-welding-line.jpg` | Hero, second frame | real photo |
   | `why-portrait.jpg` | "Why join us now?" dark band | **stand-in — needs a portrait** |
   | `about-facility.jpg` | About section | real photo |
@@ -85,9 +85,8 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   The two stand-ins are duplicates of existing frames, so the same operator currently
   appears twice on the homepage. That resolves the moment real files replace them —
   no code change needed.
-- **Display font** — swap Archivo Black for licensed **Druk Wide/Text Bold**: drop
-  `DrukWide-Bold.woff2` into `app/fonts/` and switch `app/layout.tsx` from
-  `next/font/google` to `next/font/local` (keep the `--font-display` variable).
+- ~~**Display font**~~ **Done.** Druk Text Medium loads from
+  `public/fonts/DrukText-Medium.woff2` via `@font-face` in `app/globals.css`.
 - ~~**Logo** — CSS recreation~~ **Done.** `components/ui/Wordmark.tsx` is now built from
   the official vector (Drive > Logos > `Logo_Silbloxx.svg`, kept at
   `public/brand/silbloxx-wordmark.svg`). The letterforms are the real outlines; the "O"
@@ -95,12 +94,40 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   side strokes 6.531, caps 4.898) so the footer lockup can stretch horizontally without
   distorting stroke weights. Colour follows `currentColor`; size is set by font-size,
   and the mark stands exactly 1em tall.
-- **Apply form** — front-end only (validation + success state). Wire submission to an
+- **Apply form + Get in Touch form** — front-end only (validation + success state). Wire submission to an
   email handler / Sanity CMS at go-live (per brief).
 - **EN / VN** — the language toggle is visual; wire Vietnamese copy (agency-managed).
 - **Factory facts** — the About stat grid (8.4 ha, 120+, Q4 2026, ISO 9001) is still
   carrying the original brief's numbers. Client feedback (14.08) flagged these as
   pending accurate input; update `STATS` in `components/sections/About.tsx` when they land.
+
+## Feedback round — 16.09 (boss review)
+
+Figma (`LandingPage_Desktop` 10219:43562, `LandingPage_Mobile` 10219:43563) used as the
+foundation for every change.
+
+- **Job cards** — only the Apply Now button animates on hover; the card's lift and
+  shadow are gone (`Positions.tsx`).
+- **Footer BRIAM logo** — replaced the hand-drawn approximation with the official
+  `BRIAM_Logo_Screen_Positive_RGB` vector exported from the Figma footer
+  (`public/brand/briam-logo.svg`, 116 × 39; `components/ui/BriamMark.tsx`).
+- **Footer legal links** — "Privacy Policy" is now **Terms & Conditions** →
+  `https://www.silbloxx.com/en/terms-and-conditions-0`; **Cookies Policy** →
+  `https://www.silbloxx.com/en/cookie-policy`. Both open in a new tab.
+- **Mobile hero** — one photo instead of three, per Figma `Hero` mobile (10220:33370):
+  full-width, 400px tall, brackets bottom-left and top-right. The photo is the Figma's
+  engineers-with-laptop shot, which also replaces the old `hero-team.jpg` stand-in on
+  desktop.
+- **No openings state** — when `JOBS` is empty, the Positions section becomes the Figma
+  `Positions` variant (10394:1290): "No open positions right now", intro copy, a 300px
+  photo (`public/images/no-openings.jpg`) and a **Get in Touch** form
+  (`components/sections/GetInTouchForm.tsx` — first/last name, email, phone, message).
+  Test it by passing `jobs={[]}` in `app/page.tsx`.
+- **Form borders** — the apply form (job pages) and the Get in Touch form use a 4px
+  black border to match the job cards. (The Figma draws the Get in Touch form at 2px;
+  the feedback wins.)
+- Also fixed: a 0.7px sideways scroll on mobile (About bracket overhang, now clipped),
+  and the footer lockup not stretching for visitors with reduced motion turned on.
 
 ## Feedback round — 21.08 (type, motion, logo)
 

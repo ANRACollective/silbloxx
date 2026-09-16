@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Container } from "./Container";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { BriamMark } from "@/components/ui/BriamMark";
@@ -34,6 +33,15 @@ const social = [
   { label: "Facebook", Icon: FacebookIcon, href: "https://www.facebook.com/silbloxx" },
   { label: "LinkedIn", Icon: LinkedInIcon, href: "https://www.linkedin.com/company/silbloxx" },
   { label: "Youtube", Icon: YoutubeIcon, href: "https://www.youtube.com/@silbloxx" },
+];
+
+/* Legal links point at the main silbloxx.com site (feedback 16.09). */
+const legal = [
+  {
+    label: "Terms & Conditions",
+    href: "https://www.silbloxx.com/en/terms-and-conditions-0",
+  },
+  { label: "Cookies Policy", href: "https://www.silbloxx.com/en/cookie-policy" },
 ];
 
 export function Footer() {
@@ -118,7 +126,7 @@ export function Footer() {
               Silbloxx Asia is part of the BRIAM Group — a Belgian industrial
               group active in food and feed infrastructure worldwide.
             </p>
-            <BriamMark className="h-7 text-ink" />
+            <BriamMark />
           </div>
         </div>
 
@@ -151,12 +159,17 @@ export function Footer() {
         <div className="mt-10 flex flex-col gap-4 border-t border-ink/10 pt-6 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between lg:mt-8 lg:border-t-0 lg:pt-0">
           <p>© {YEAR} Silbloxx. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <Link href="#" className="underline-offset-2 hover:text-ink hover:underline">
-              Privacy Policy
-            </Link>
-            <Link href="#" className="underline-offset-2 hover:text-ink hover:underline">
-              Cookies Policy
-            </Link>
+            {legal.map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener"
+                className="underline underline-offset-2 hover:text-ink"
+              >
+                {label}
+              </a>
+            ))}
           </div>
         </div>
       </Container>

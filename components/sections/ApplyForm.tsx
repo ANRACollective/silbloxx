@@ -101,7 +101,8 @@ export function ApplyForm({
   const errorCount = Object.keys(errors).length;
 
   return (
-    <div className="border border-ink bg-paper p-6 lg:p-8">
+    // 4px rule to match the job cards (feedback 16.09)
+    <div className="border-[4px] border-ink bg-paper p-6 lg:p-8">
       <AnimatePresence mode="wait">
         {sent ? (
           <motion.div
