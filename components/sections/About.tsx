@@ -63,7 +63,6 @@ export function About() {
               src="/images/about-facility.jpg"
               alt="Silbloxx Asia silo facility at dusk in Ho Chi Minh City"
               corners={["tr", "bl"]}
-              bracket={64}
               className="aspect-[5/6] w-full lg:aspect-auto lg:h-[560px]"
               placeholderLabel="HCMC silo facility"
             />

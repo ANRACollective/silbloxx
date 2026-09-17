@@ -45,13 +45,22 @@ export function Hero() {
               </p>
             </Reveal>
           </div>
-          <Reveal delay={0.28} className="flex flex-wrap items-start gap-4">
-            <Button href="/#open-positions">View Open Positions</Button>
+          {/* Mobile (boss 17.09): the three buttons squeezed onto one row and the
+              About labels broke over two lines. Below `md` the primary gets its
+              own full-width row and the two About buttons share the next one,
+              labels kept on a single line. From `md` up: one row, as in Figma. */}
+          <Reveal
+            delay={0.28}
+            className="grid grid-cols-2 gap-4 md:flex md:flex-wrap md:items-start"
+          >
+            <Button href="/#open-positions" className="col-span-2 text-[18px] md:col-auto md:text-[20px]">
+              View Open Positions
+            </Button>
             <Button
               href="https://www.silbloxx.com/en/about-us"
               external
               variant="secondary"
-              className="flex-1 sm:w-[185px] sm:flex-none"
+              className="whitespace-nowrap px-3 text-[18px] md:w-[185px] md:px-[18px] md:text-[20px]"
             >
               About SILBLOXX
             </Button>
@@ -59,7 +68,7 @@ export function Hero() {
               href="https://www.briamgroup.com/company"
               external
               variant="secondary"
-              className="flex-1 sm:w-[185px] sm:flex-none"
+              className="whitespace-nowrap px-3 text-[18px] md:w-[185px] md:px-[18px] md:text-[20px]"
             >
               About BRIAM
             </Button>

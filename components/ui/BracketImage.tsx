@@ -20,7 +20,7 @@ export function BracketImage({
   className,
   imgClassName,
   bracket = 80,
-  thickness = 24.67,
+  thickness,
   bracketColor = "var(--color-ink)",
   priority,
   placeholderLabel,
@@ -38,6 +38,10 @@ export function BracketImage({
   placeholderLabel?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  // The L's arm is 24.67 in an 80-unit box and scales with the bracket, so
+  // the overhang must scale too — a fixed 24.67 left a visible gap between a
+  // smaller bracket and the photo corner (boss 17.09: "still desktop bug").
+  const arm = thickness ?? (24.67 * bracket) / 80;
   const showImg = src && !failed;
   return (
     <div className={cn("relative", className)}>
@@ -81,11 +85,11 @@ export function BracketImage({
             ...(c.includes("l") ? { left: 0 } : { right: 0 }),
             // overhang the frame edge by the arm thickness, as in the design
             ...(c.includes("t")
-              ? { marginTop: -thickness }
-              : { marginBottom: -thickness }),
+              ? { marginTop: -arm }
+              : { marginBottom: -arm }),
             ...(c.includes("l")
-              ? { marginLeft: -thickness }
-              : { marginRight: -thickness }),
+              ? { marginLeft: -arm }
+              : { marginRight: -arm }),
           }}
         >
           <BrandBracket

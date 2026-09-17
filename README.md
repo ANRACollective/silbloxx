@@ -101,6 +101,34 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   carrying the original brief's numbers. Client feedback (14.08) flagged these as
   pending accurate input; update `STATS` in `components/sections/About.tsx` when they land.
 
+## Boss comments — 17.09
+
+- **Mobile hero buttons:** below 768px, *View Open Positions* takes a full-width row
+  and *About SILBLOXX* / *About BRIAM* share the next row at 18px, with labels on one
+  line (checked at 320, 360, 390 and 640). From 768px up, all three sit on one row as
+  in the Figma.
+- **Desktop bracket gap (About photo):** `BracketImage` offset every bracket by a fixed
+  24.67px, which is only right for the 80px bracket. The About photo used a 64px
+  bracket, so its corners floated about 5px off the photo. The offset now scales with
+  the bracket size, and About uses the Figma's 80px brackets. Every bracket on the page
+  measures 0.01px from its photo corner.
+- **CV upload in the empty-state form:** the client wants CVs here after all. The job
+  apply form's *Upload your CV (PDF)* control is added under Message (required, PDF up
+  to 5MB). The form otherwise stays different from the apply form: 2px frame, no
+  heading, LinkedIn field or consent line, and a *Get in Touch* button.
+
+## Empty-state preview + form split — 16.09 (late)
+
+- **Temporary preview:** `/preview/no-openings` (`app/preview/no-openings/page.tsx`) shows
+  the Open Positions empty state with the real navbar and footer, under a yellow
+  "Preview only" bar. Nothing links to it and it's `noindex`. **Delete `app/preview/`
+  once it's signed off.** The homepage still lists the live jobs.
+- **Empty-state form is now clearly different from the job apply form**, exactly as the
+  Figma draws it: first/last name, email, phone, message, **Get in Touch**, in a
+  **2px** frame. No heading, CV upload, LinkedIn field or consent line; those stay on the
+  job-page apply form (4px frame). This replaces the CV upload + consent added earlier
+  the same day.
+
 ## Review meeting — 16.09 (follow-up, Figma as the source)
 
 - **Copy follows the current Figma:** hero body ("Silbloxx Asia is the Vietnamese arm of
@@ -127,8 +155,8 @@ brand-sanctioned free fallback (currently active). Body: **Gruppo**.
   link no longer move, and other buttons and links only change colour. Tailwind v4's
   `hover:` is scoped to `@media (hover: hover)` and the custom `.link-underline` rule
   is too, so touch devices get no hover effects.
-- **No-openings form = general application:** added a required CV upload (PDF, 5 MB)
-  and the data-processing consent, matching the apply form.
+- ~~No-openings form = general application with CV upload~~ reverted later the same
+  day (see above).
 - Fixed: `aria-label` on link buttons (e.g. "Apply for Production Supervisor") was being
   dropped.
 
@@ -154,9 +182,9 @@ foundation for every change.
   photo (`public/images/no-openings.jpg`) and a **Get in Touch** form
   (`components/sections/GetInTouchForm.tsx` — first/last name, email, phone, message).
   Test it by passing `jobs={[]}` in `app/page.tsx`.
-- **Form borders** — the apply form (job pages) and the Get in Touch form use a 4px
-  black border to match the job cards. (The Figma draws the Get in Touch form at 2px;
-  the feedback wins.)
+- **Form borders** — the apply form (job pages) uses a 4px black border to match the
+  job cards. (The Get in Touch form went back to the Figma's 2px later that day, so
+  the two forms look different.)
 - Also fixed: a 0.7px sideways scroll on mobile (About bracket overhang, now clipped),
   and the footer lockup not stretching for visitors with reduced motion turned on.
 

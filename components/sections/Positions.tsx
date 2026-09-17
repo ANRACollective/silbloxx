@@ -154,6 +154,7 @@ function DesktopRow({ jobs }: { jobs: Job[] }) {
 /**
  * No openings — Figma `Positions` variant (node 10394:1290), shown when the
  * job list is empty (feedback 16.09) so people can still get in touch.
+ * Also rendered on its own at /preview/no-openings for review.
  *
  *   section    px 64, py 112 (same shell as the listing)
  *   container  row, gap 42; left column flex-1, justify-between
@@ -161,7 +162,7 @@ function DesktopRow({ jobs }: { jobs: Job[] }) {
  *   image      full column width x 300, cropped toward the upper third
  *   form       see GetInTouchForm
  */
-function NoOpenings() {
+export function NoOpenings() {
   return (
     <section id="open-positions" className="scroll-mt-24 overflow-hidden py-28">
       <Container className="flex flex-col gap-[42px] lg:flex-row lg:items-start">
