@@ -1,153 +1,109 @@
-import { Container } from "./Container";
-import { Wordmark } from "@/components/ui/Wordmark";
+import { Container } from "@/components/layout/Container";
 import { BriamMark } from "@/components/ui/BriamMark";
-import {
-  FacebookIcon,
-  LinkedInIcon,
-  YoutubeIcon,
-} from "@/components/ui/icons";
+import { FacebookIcon, LinkedInIcon, YoutubeIcon } from "@/components/ui/icons";
+import { Wordmark } from "@/components/ui/Wordmark";
+import { EXTERNAL_LINKS, OFFICES, SOCIAL_LINKS, type Office } from "@/lib/site";
 
-const YEAR = 2026;
+const SOCIAL_ICONS = {
+  facebook: FacebookIcon,
+  linkedin: LinkedInIcon,
+  youtube: YoutubeIcon,
+} as const;
 
-function ColHeading({ children }: { children: React.ReactNode }) {
+const LEGAL_LINKS = [
+  { label: "Terms & Conditions", href: EXTERNAL_LINKS.terms },
+  { label: "Cookies Policy", href: EXTERNAL_LINKS.cookies },
+] as const;
+
+function ColumnHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="font-display text-[17px] tracking-[-0.01em] text-ink">
-      {children}
-    </h3>
+    <h3 className="font-display text-[17px] tracking-[-0.01em] text-ink">{children}</h3>
   );
 }
 
-function MailLink({ children }: { children: string }) {
+function OfficeColumn({ office }: { office: Office }) {
   return (
-    <a
-      href={`mailto:${children}`}
-      /* long addresses must wrap inside their column rather than spill out */
-      className="link-underline [overflow-wrap:anywhere] text-orange"
-    >
-      {children}
-    </a>
+    <div className="space-y-3 text-[14px] leading-relaxed text-muted">
+      <ColumnHeading>{office.name}</ColumnHeading>
+      <address className="not-italic">
+        {office.address.map((line) => (
+          <span key={line} className="block">
+            {line}
+          </span>
+        ))}
+      </address>
+      <p>
+        <a
+          href={`mailto:${office.email}`}
+          className="link-underline [overflow-wrap:anywhere] text-orange"
+        >
+          {office.email}
+        </a>
+      </p>
+      <p>{office.phone}</p>
+    </div>
   );
 }
-
-const social = [
-  { label: "Facebook", Icon: FacebookIcon, href: "https://www.facebook.com/silbloxx" },
-  { label: "LinkedIn", Icon: LinkedInIcon, href: "https://www.linkedin.com/company/silbloxx" },
-  { label: "Youtube", Icon: YoutubeIcon, href: "https://www.youtube.com/@silbloxx" },
-];
-
-/* Legal links point at the main silbloxx.com site (feedback 16.09). */
-const legal = [
-  {
-    label: "Terms & Conditions",
-    href: "https://www.silbloxx.com/en/terms-and-conditions-0",
-  },
-  { label: "Cookies Policy", href: "https://www.silbloxx.com/en/cookie-policy" },
-];
 
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    // transparent so the page's noise ground runs unbroken into the footer
     <footer className="relative overflow-hidden">
-      {/* yellow radial wash rising from the lower edge */}
-      <div className="wash-yellow pointer-events-none absolute inset-x-0 bottom-0 h-[60%]" />
+      <div
+        aria-hidden
+        className="wash-yellow pointer-events-none absolute inset-x-0 bottom-0 h-[60%]"
+      />
 
-      <Container className="relative pb-10 pt-14 lg:pt-16">
-        {/* top rule */}
-        <div className="h-[6px] w-full bg-ink" />
+      <Container className="relative pt-14 pb-10 lg:pt-16">
+        <div aria-hidden className="h-1.5 w-full bg-ink" />
 
-        {/* columns */}
         <div className="relative mt-12 grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1fr_1fr_1.5fr] lg:gap-x-10">
-          <div className="space-y-3 text-[14px] leading-relaxed text-muted">
-            <ColHeading>Head Office</ColHeading>
-            <p>
-              Silbloxx HQ — Belgium
-              <br />
-              BRIAM Group
-            </p>
-            <p>
-              <MailLink>hq@silbloxx.com</MailLink>
-            </p>
-            <p>+32 11 00 00 00</p>
-          </div>
-
-          <div className="space-y-3 text-[14px] leading-relaxed text-muted">
-            <ColHeading>Asia Sales Office</ColHeading>
-            <p>
-              75 High Street
-              <br />
-              Singapore 179435
-              <br />
-              Singapore
-            </p>
-            <p>
-              <MailLink>sales.asia@silbloxx.com</MailLink>
-            </p>
-            <p>+65 0000 0000</p>
-          </div>
-
-          <div className="space-y-3 text-[14px] leading-relaxed text-muted">
-            <ColHeading>Manufacturing</ColHeading>
-            <p>
-              An Khánh Ward
-              <br />
-              Ho Chi Minh City, Vietnam
-            </p>
-            <p>
-              <MailLink>careers.asia@silbloxx.com</MailLink>
-            </p>
-            <p>+84 28 0000 0000</p>
-          </div>
+          {OFFICES.map((office) => (
+            <OfficeColumn key={office.name} office={office} />
+          ))}
 
           <div className="space-y-3 text-[14px] text-muted">
-            <ColHeading>Follow Us</ColHeading>
+            <ColumnHeading>Follow Us</ColumnHeading>
             <ul className="space-y-3">
-              {social.map(({ label, Icon, href }) => (
-                <li key={label}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group inline-flex items-center gap-3 text-ink hover:text-orange"
-                  >
-                    <span className="grid h-6 w-6 place-items-center">
-                      <Icon width={20} height={20} />
-                    </span>
-                    <span className="text-[14px] text-muted group-hover:text-orange">
-                      {label}
-                    </span>
-                  </a>
-                </li>
-              ))}
+              {SOCIAL_LINKS.map(({ platform, label, href }) => {
+                const Icon = SOCIAL_ICONS[platform];
+                return (
+                  <li key={platform}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-3 text-ink hover:text-orange"
+                    >
+                      <span className="grid size-6 place-items-center">
+                        <Icon width={20} height={20} />
+                      </span>
+                      <span className="text-[14px] text-muted group-hover:text-orange">
+                        {label}
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
           <div className="col-span-2 max-w-[320px] space-y-5 sm:col-span-3 lg:col-span-1">
             <p className="text-[15px] leading-relaxed text-muted">
-              Silbloxx Asia is part of the BRIAM Group — a Belgian industrial
-              group active in food and feed infrastructure worldwide.
+              Silbloxx Asia is part of the BRIAM Group — a Belgian industrial group active
+              in food and feed infrastructure worldwide.
             </p>
             <BriamMark />
           </div>
         </div>
 
-        {/* Oversized lockup — the Figma's stretched treatment, where the O runs
-            long to fill the width. Horizontal at every breakpoint (14.08: the
-            mobile version used to rotate 90° and ate the columns' space).
-            Sized off the *container* width via container-query units: the
-            lockup has a hard 10.13:1 minimum aspect, and `vw` would ignore the
-            page gutters and push the final X off-screen on small viewports.
-            The O opens out from its natural width on scroll-in. */}
-        <div
-          className="mt-14 lg:mt-16"
-          style={{ containerType: "inline-size" }}
-        >
-          {/* Height cap measured off the Figma frame export: the lockup there is
-              1310 x 52 (25.3:1), splitting SILBL 21.2% / O 67.7% / XX 11.1%.
-              Capping at 92px made the lockup too tall, which inflated SILBL and
-              XX and squeezed the O down to 42%. The glyph ratio was already
-              correct (SILBL:XX is 1.90 in both) — only the height was off.
-              Below ~527px of container the 10.15:1 minimum takes over and the
-              O sits at its natural width, which is the mobile case. */}
+        {/*
+          Stretched lockup. Sized from the container width (container query
+          units) so it never overflows the page gutters; the artwork needs at
+          least a 10.15:1 width-to-height ratio, and 52px is the design height.
+        */}
+        <div className="[container-type:inline-size] mt-14 lg:mt-16">
           <Wordmark
             stretch
             animate
@@ -155,22 +111,22 @@ export function Footer() {
           />
         </div>
 
-        {/* bottom bar */}
         <div className="mt-10 flex flex-col gap-4 border-t border-ink/10 pt-6 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between lg:mt-8 lg:border-t-0 lg:pt-0">
-          <p>© {YEAR} Silbloxx. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            {legal.map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener"
-                className="underline underline-offset-2 hover:text-ink"
-              >
-                {label}
-              </a>
+          <p>© {year} Silbloxx. All rights reserved.</p>
+          <ul className="flex items-center gap-6">
+            {LEGAL_LINKS.map(({ label, href }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-ink"
+                >
+                  {label}
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </Container>
     </footer>

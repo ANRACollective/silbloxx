@@ -1,71 +1,101 @@
-"use client";
-
-import { motion } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { BracketImage } from "@/components/ui/BracketImage";
-import { Reveal, RevealGroup, revealItem } from "@/components/ui/Reveal";
+import { Reveal } from "@/components/ui/Reveal";
 
-/**
- * Factory facts. Still the original brief's numbers — the client flagged these
- * as pending accurate input (feedback 14.08).
- *
- * All four are plain black in the design; the yellow "Q4 2026" treatment from
- * the earlier round isn't in the Figma, and black also resolves the 1.36:1
- * legibility problem yellow-on-ground had.
- */
-const STATS = [
-  { value: "8.4 ha", label: "Site area" },
-  { value: "120+", label: "Local roles at full capacity" },
-  { value: "Q4 2026", label: "First line online" },
-  { value: "ISO 9001", label: "Quality target, year one" },
-];
+/** Key facts, shown as two rows of two. */
+const FACTS = [
+  [
+    { value: "8.4 ha", label: "Site area" },
+    { value: "120+", label: "Local roles at full capacity" },
+  ],
+  [
+    { value: "Q4 2026", label: "First line online" },
+    { value: "ISO 9001", label: "Quality target, year one" },
+  ],
+] as const;
 
-function StatGrid() {
+function Facts() {
   return (
-    <RevealGroup as="div" className="mt-10 grid grid-cols-2 gap-x-8 gap-y-9">
-      {STATS.map((s) => (
-        <motion.div key={s.label} variants={revealItem}>
-          <div className="font-display text-[34px] leading-[1.3] text-ink lg:text-[40px]">
-            {/* Static (review 16.09): data points and codes don't animate. */}
-            {s.value}
-          </div>
-          <div className="mt-3 font-display text-[18px] leading-[1.4] text-ink">
-            {s.label}
-          </div>
-        </motion.div>
+    <div className="flex flex-col gap-[30px] lg:gap-10">
+      {FACTS.map((row, i) => (
+        <div key={i} className="flex items-start lg:gap-5">
+          {row.map((s, j) => (
+            <div
+              key={s.label}
+              className={
+                j === 0
+                  ? "flex w-[140px] shrink-0 flex-col lg:w-[200px]"
+                  : "flex min-w-px flex-1 flex-col pl-[10px] lg:w-[220px] lg:flex-none"
+              }
+            >
+              <span className="font-display text-[40px] leading-[1.2] text-ink lg:text-[56px]">
+                {s.value}
+              </span>
+              <span className="font-display text-[18px] leading-[1.4] text-ink lg:text-[20px]">
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </div>
       ))}
-    </RevealGroup>
+    </div>
   );
 }
 
+/**
+ * Section photo. Phones and tablets get a landscape crop (or a different
+ * landscape photo via `mobile.src`) so the image does not fill the screen;
+ * desktop keeps the square from the design.
+ */
+const PHOTO = {
+  desktop: {
+    src: "/images/about-facility.jpg",
+    alt: "Silbloxx silo installation at dusk",
+    sizes: "50vw",
+  },
+  mobile: {
+    src: "/images/about-facility.jpg",
+    alt: "Silbloxx silo installation at dusk",
+    sizes: "100vw",
+    position: "50% 42%",
+  },
+} as const;
+
+/** About Silbloxx Asia (Figma "About"): introduction, key facts and a photo. */
 export function About() {
   return (
-    <section className="scroll-mt-24 overflow-x-clip py-20">
-      {/* Figma About (node 10230:684): two columns, 80px gap, no eyebrow. */}
-      <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20">
-        <Reveal>
-          <h2 className="h1 max-w-[768px] text-ink">
-            Decades of experience.
-            <br />
-            Now building in Vietnam.
-          </h2>
-          <p className="mt-6 max-w-[500px] text-left lg:text-justify text-[18px] leading-[1.5] text-ink">
-            For decades, Silbloxx has supplied modular silo systems to projects
-            across Europe, Asia, and Africa. Our new facility in Ho Chi Minh City
-            brings production closer to our customers across Asia and the wider
-            region.
-          </p>
-          <StatGrid />
+    <section id="about" className="scroll-mt-24 overflow-x-clip py-16 lg:py-28">
+      <Container className="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-[50px]">
+        <Reveal className="flex min-w-px flex-col gap-12 lg:flex-1 lg:gap-10">
+          <div className="flex max-w-[768px] flex-col gap-5 lg:gap-6">
+            <h2 className="h1 text-ink">
+              Decades of experience.
+              <br />
+              Now building in Vietnam.
+            </h2>
+            <p className="text-left text-[16px] leading-[1.5] text-ink lg:text-justify lg:text-[18px]">
+              For decades, Silbloxx has supplied modular silo systems to projects across
+              Europe, Asia, and Africa. Our new facility in Ho Chi Minh City brings
+              production closer to our customers across Asia and the wider region.
+            </p>
+          </div>
+          <Facts />
         </Reveal>
 
-        <Reveal delay={0.1}>
+        <Reveal delay={0.1} className="min-w-px lg:flex-1">
+          {/* Brackets are 60px on mobile and 80px on desktop. */}
           <BracketImage
-              src="/images/about-facility.jpg"
-              alt="Silbloxx Asia silo facility at dusk in Ho Chi Minh City"
-              corners={["tr", "bl"]}
-              className="aspect-[5/6] w-full lg:aspect-auto lg:h-[560px]"
-              placeholderLabel="HCMC silo facility"
-            />
+            {...PHOTO.mobile}
+            corners={["tr", "bl"]}
+            bracket={60}
+            className="aspect-[3/2] w-full lg:hidden"
+          />
+          <BracketImage
+            {...PHOTO.desktop}
+            corners={["tr", "bl"]}
+            bracket={80}
+            className="hidden aspect-square w-full lg:block"
+          />
         </Reveal>
       </Container>
     </section>

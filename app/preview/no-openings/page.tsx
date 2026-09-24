@@ -1,28 +1,26 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { NoOpenings } from "@/components/sections/Positions";
+import { Navbar } from "@/components/layout/Navbar";
+import { NoOpenings } from "@/components/sections/NoOpenings";
 
 /**
- * TEMPORARY review page (boss, 16.09): shows the Open Positions empty state
- * — what the homepage renders when `JOBS` is empty — without touching the
- * live job list. Not linked from anywhere and kept out of search engines.
- * Delete this folder (app/preview) once the empty state is signed off.
+ * Review page for the "no open positions" state, which the homepage shows
+ * automatically when the job list is empty. Not linked from the site and
+ * excluded from search engines. Remove `app/preview/` when no longer needed.
  */
 export const metadata: Metadata = {
-  title: "Preview — no open positions",
+  title: "Preview: no open positions",
   robots: { index: false, follow: false },
 };
 
-export default function NoOpeningsPreview() {
+export default function NoOpeningsPreviewPage() {
   return (
     <>
       <Navbar />
       <main>
-        <div className="border-b-4 border-ink bg-yellow px-4 py-3 text-center font-display text-[16px] text-ink">
-          Preview only — this is how Open Positions looks when no roles are
-          listed.
-        </div>
+        <p className="border-b-4 border-ink bg-yellow px-4 py-3 text-center font-display text-[16px] text-ink">
+          Preview — how the Open Positions section looks when no roles are listed.
+        </p>
         <NoOpenings />
       </main>
       <Footer />

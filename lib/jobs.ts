@@ -1,24 +1,31 @@
 export type Job = {
+  /** URL segment: /jobs/<slug>. Must be unique. */
   slug: string;
   title: string;
+  /** Shown as the tag on the listing card. */
   team: string;
   location: string;
+  /** Employment type, e.g. "Full-time". */
   type: string;
-  posted: string; // display date
-  summary: string; // listing card blurb
-  intro: string; // job detail lead line
+  /** Display date, e.g. "3 Aug 2026". */
+  posted: string;
+  /** One-line teaser on the listing card. */
+  summary: string;
+  /** Lead paragraph on the job page (also the page description). */
+  intro: string;
+  /** Sentence introducing the "Your role" list. */
   roleLead: string;
-  role: string[];
-  who: string[];
-  offer: string[];
+  role: readonly string[];
+  who: readonly string[];
+  offer: readonly string[];
 };
 
 /**
- * Source of truth for open roles: Drive › Docs from SD › 01-project-overview.md.
- * "Production Supervisor" copy matches the designed Figma job-detail page 1:1;
- * the other five roles follow the same structure and brand voice.
+ * Open roles, in display order.
+ * To remove a role, delete its entry. When the list is empty the homepage
+ * shows the "No open positions right now" enquiry form instead.
  */
-export const JOBS: Job[] = [
+export const JOBS: readonly Job[] = [
   {
     slug: "production-supervisor",
     title: "Production Supervisor",
@@ -60,8 +67,7 @@ export const JOBS: Job[] = [
     summary: "Build the local supply base that keeps the line moving.",
     intro:
       "Own procurement for the new Silbloxx Asia facility — from raw steel to consumables. You build a reliable, cost-smart local supply base.",
-    roleLead:
-      "You set up and run purchasing for a facility that is scaling from zero.",
+    roleLead: "You set up and run purchasing for a facility that is scaling from zero.",
     role: [
       "Source and qualify local suppliers for steel, coatings, and components",
       "Negotiate pricing, lead times, and terms against production plans",
@@ -122,8 +128,7 @@ export const JOBS: Job[] = [
     summary: "Keep welding robots and coating lines running at full tilt.",
     intro:
       "Keep the machines that build the silos running. You handle preventive and reactive maintenance across the new production line.",
-    roleLead:
-      "You keep welding, coating, and handling equipment available and safe.",
+    roleLead: "You keep welding, coating, and handling equipment available and safe.",
     role: [
       "Carry out preventive maintenance on production and utility equipment",
       "Diagnose and fix mechanical, electrical, and pneumatic faults",
@@ -153,8 +158,7 @@ export const JOBS: Job[] = [
     summary: "Help build the team behind a facility scaling to 120+.",
     intro:
       "Support the people side of a facility growing from zero to 120+. You keep HR and admin running smoothly as the team scales.",
-    roleLead:
-      "You handle day-to-day HR and office administration for the new plant.",
+    roleLead: "You handle day-to-day HR and office administration for the new plant.",
     role: [
       "Coordinate recruitment, onboarding, and employee records",
       "Manage contracts, payroll inputs, and local compliance",
@@ -207,4 +211,6 @@ export const JOBS: Job[] = [
   },
 ];
 
-export const getJob = (slug: string) => JOBS.find((j) => j.slug === slug);
+export function getJob(slug: string): Job | undefined {
+  return JOBS.find((job) => job.slug === slug);
+}

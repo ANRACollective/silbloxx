@@ -1,25 +1,22 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { EASE_BRAND } from "@/components/ui/motion";
 import { cn } from "@/lib/cn";
 
 /**
- * SILBLOXX wordmark — built from the official vector
- * (Drive › Logos › `Logo_Silbloxx.svg`, also kept at
- * /public/brand/silbloxx-wordmark.svg for reference).
+ * SILBLOXX wordmark, built from the official vector
+ * (`public/brand/silbloxx-wordmark.svg`).
  *
- * The letterforms are the real outlines, not a font approximation. The "O" is
- * the brand's signature square-cornered box glyph; because it's geometrically
- * exact — a rectangle with a rectangular counter — it's rendered as a bordered
- * box rather than a path, which lets the footer lockup stretch it horizontally
- * without distorting the stroke weights.
+ * The letterforms are the original outlines. The "O" is a rectangle with a
+ * rectangular counter, so it is rendered as a bordered box: this lets the
+ * footer lockup stretch it horizontally without distorting the stroke weights.
  *
- * All measurements below are in the source artwork's own units, normalised
- * against the full mark height (20.406). Colour follows `currentColor`.
- * Size is driven by font-size: the mark stands exactly 1em tall.
+ * Measurements are in the artwork's own units, normalised against the full
+ * mark height. The mark is exactly 1em tall and inherits `currentColor`.
  */
 
-/** Full artwork height — the unit every other measurement is expressed against. */
+/** Full artwork height: the unit every other measurement is expressed against. */
 const H = 20.406;
 
 const U = {
@@ -31,7 +28,7 @@ const U = {
   oW: 37.812 / H,
   oH: 19.7 / H,
   oTop: 0.343 / H,
-  /** O stroke weights — vertical bars are noticeably heavier than the caps */
+  /** O stroke weights: the vertical bars are heavier than the caps */
   oSide: 6.531 / H,
   oCap: 4.898 / H,
   /** optical gaps either side of the O */
@@ -94,22 +91,19 @@ function Xx() {
   );
 }
 
-export function Wordmark({
-  className,
-  stretch = false,
-  animate = false,
-}: {
+type WordmarkProps = {
   className?: string;
   /** Footer lockup: the O grows to fill the row instead of keeping its width. */
   stretch?: boolean;
   /**
-   * Stretch variant only: the O starts at its natural width and opens out to
-   * fill the row when scrolled into view, carrying "XX" with it. Animates
-   * flex-grow rather than scaleX — scaling would squash the O's side strokes,
-   * which are a fixed 33% of its height in the real artwork.
+   * Stretch variant only: the O opens out from its natural width when scrolled
+   * into view. Animates `flex-grow` rather than `scaleX`, which would distort
+   * the side strokes.
    */
   animate?: boolean;
-}) {
+};
+
+export function Wordmark({ className, stretch = false, animate = false }: WordmarkProps) {
   const reduce = useReducedMotion();
   const animates = stretch && animate && !reduce;
 
@@ -145,16 +139,12 @@ export function Wordmark({
         className={cn("block shrink-0 border-current", stretch && "flex-1")}
         style={oStyle}
         initial={animates ? { flexGrow: 0 } : false}
-        // Always resolve to the stretched state when stretching: SSR renders
-        // with motion allowed (flexGrow 0), so reduced-motion clients must
-        // still be driven to flexGrow 1 — instantly, via the 0s transition.
+        // Always resolve to the stretched state. The server renders the
+        // animated start state, so reduced-motion clients still need this
+        // target, reached instantly through the zero-length transition.
         whileInView={stretch ? { flexGrow: 1 } : undefined}
         viewport={{ once: true, margin: "-10% 0px" }}
-        transition={
-          animates
-            ? { duration: 1.15, ease: [0.16, 1, 0.3, 1] }
-            : { duration: 0 }
-        }
+        transition={animates ? { duration: 1.15, ease: EASE_BRAND } : { duration: 0 }}
       />
 
       <Xx />

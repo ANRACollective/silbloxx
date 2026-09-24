@@ -1,21 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Label, Input, Textarea } from "@/components/ui/form";
+import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { FormSuccess } from "@/components/sections/FormSuccess";
 import { Button } from "@/components/ui/Button";
-import { ArrowUpRight } from "@/components/ui/icons";
-import { cn } from "@/lib/cn";
+import { CvUpload, FieldError, Input, Label, Textarea } from "@/components/ui/form";
+import { isEmail, isFilled } from "@/lib/validation";
 
-type Fields = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  message: string;
-};
+type TextField = "firstName" | "lastName" | "email" | "phone" | "message";
+type RequiredField = Exclude<TextField, "message">;
+type ErrorKey = RequiredField | "cv";
 
-const EMPTY: Fields = {
+const EMPTY: Record<TextField, string> = {
   firstName: "",
   lastName: "",
   email: "",
@@ -23,97 +19,82 @@ const EMPTY: Fields = {
   message: "",
 };
 
-const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-
-const MESSAGES: Record<string, string> = {
+const MESSAGES: Record<ErrorKey, string> = {
   firstName: "Enter your first name.",
   lastName: "Enter your last name.",
   email: "Enter a valid email address.",
   phone: "Enter a phone number we can reach you on.",
-  file: "Attach your CV as a PDF (max 5MB).",
+  cv: "Attach your CV as a PDF (max 5MB).",
 };
 
-const MAX_CV_BYTES = 5 * 1024 * 1024;
-
-/** Figma label: Gruppo 18/1.5, black. */
-const LABEL = "text-[18px] leading-[1.5] text-ink";
+const LABEL = "mb-2 text-[18px] leading-[1.5] text-ink";
 
 /**
- * "Get in touch" form for the no-openings state — Figma
- * `Positions` (node 10394:1290) › Form (I10394:1290;10384:1100).
- *
- *   form     p 32, content 400 wide, gap 24 between rows, 16 before actions
- *   inputs   two-up rows with gap 24; label gap 8; field h 48, p 12, 1px black
- *   message  h 180 textarea
- *   button   full-width orange, Heading-6 "Get in Touch"
- *
- * Deliberately NOT the job apply form (boss, 16.09: "make sure the empty
- * state form is different"): no heading, no LinkedIn, no consent line, a
- * 2px frame (the apply form's is 4px) and a "Get in Touch" call to action.
- *
- * CV upload (boss 17.09: the client wants CVs here too): the same Upload
- * control as the apply form, placed under Message, required, PDF ≤ 5MB.
- *
- * Front-end only, like the apply form: validates, then shows a success state.
- * Inputs carry `name` attributes so it can be wired to email/CRM at go-live.
+ * General enquiry form shown when there are no open roles (Figma "Positions",
+ * no-openings variant). Deliberately lighter than the job application form:
+ * no heading, LinkedIn field or consent line, and a 2px frame.
+ * Validates on the client; submission is not yet connected to a back end.
  */
 export function GetInTouchForm() {
-  const [values, setValues] = useState<Fields>(EMPTY);
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [values, setValues] = useState(EMPTY);
+  const [cv, setCv] = useState<File | null>(null);
+  const [errors, setErrors] = useState<Partial<Record<ErrorKey, true>>>({});
   const [sent, setSent] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
-  const reduce = useReducedMotion();
 
-  const set =
-    (k: keyof Fields) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      setValues((v) => ({ ...v, [k]: e.target.value }));
+  const id = (name: string) => `enquiry-${name}`;
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const errs: Record<string, boolean> = {};
-    if (!values.firstName.trim()) errs.firstName = true;
-    if (!values.lastName.trim()) errs.lastName = true;
-    if (!emailOk(values.email)) errs.email = true;
-    if (!values.phone.trim()) errs.phone = true;
-    if (!file) errs.file = true;
-    setErrors(errs);
-    if (Object.keys(errs).length === 0) {
+  const clearError = (key: ErrorKey) => setErrors(({ [key]: _removed, ...rest }) => rest);
+
+  const update =
+    (field: TextField) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setValues((current) => ({ ...current, [field]: event.target.value }));
+      if (field !== "message") clearError(field);
+    };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const found: Partial<Record<ErrorKey, true>> = {};
+    if (!isFilled(values.firstName)) found.firstName = true;
+    if (!isFilled(values.lastName)) found.lastName = true;
+    if (!isEmail(values.email)) found.email = true;
+    if (!isFilled(values.phone)) found.phone = true;
+    if (!cv) found.cv = true;
+    setErrors(found);
+
+    const [first] = Object.keys(found) as ErrorKey[];
+    if (!first) {
       setSent(true);
       return;
     }
-    const first = Object.keys(errs)[0];
-    document
-      .getElementById(`git-${first === "file" ? "cvTrigger" : first}`)
-      ?.focus();
+    // Move focus to the first invalid field.
+    document.getElementById(first === "cv" ? `${id("cv")}-trigger` : id(first))?.focus();
   };
 
-  const field = (
-    k: Exclude<keyof Fields, "message">,
+  const textInput = (
+    field: RequiredField,
     label: string,
     type: string,
     autoComplete: string,
   ) => (
-    <div className="flex min-w-px flex-1 flex-col gap-2">
-      <Label htmlFor={`git-${k}`} required className={`mb-0 ${LABEL}`}>
+    <div className="min-w-px flex-1">
+      <Label htmlFor={id(field)} required className={LABEL}>
         {label}
       </Label>
       <Input
-        id={`git-${k}`}
-        name={k}
+        id={id(field)}
+        name={field}
         type={type}
-        value={values[k]}
-        onChange={set(k)}
         autoComplete={autoComplete}
-        aria-invalid={!!errors[k]}
-        aria-describedby={errors[k] ? `git-${k}-err` : undefined}
+        value={values[field]}
+        onChange={update(field)}
+        aria-invalid={errors[field] ?? false}
+        aria-describedby={errors[field] ? id(`${field}-error`) : undefined}
         className="h-12 p-3"
       />
-      {errors[k] && (
-        <p id={`git-${k}-err`} className="text-[13px] leading-[1.4] text-ink">
-          {MESSAGES[k]}
-        </p>
+      {errors[field] && (
+        <FieldError id={id(`${field}-error`)}>{MESSAGES[field]}</FieldError>
       )}
     </div>
   );
@@ -122,99 +103,60 @@ export function GetInTouchForm() {
     <div className="w-full border-2 border-ink bg-paper p-6 sm:p-8 lg:w-auto lg:shrink-0">
       <AnimatePresence mode="wait">
         {sent ? (
-          <motion.div
-            key="done"
-            initial={{ opacity: 0, y: reduce ? 0 : 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="py-6 text-center lg:w-[400px]"
-            role="status"
+          <FormSuccess
+            key="sent"
+            title="Thanks — we've got your details."
+            className="lg:w-[400px]"
           >
-            <div className="mx-auto grid h-12 w-12 place-items-center bg-orange text-paper">
-              <ArrowUpRight width={22} height={22} />
-            </div>
-            <h3 className="h5 mt-5 text-ink">Thanks — we&apos;ve got your details.</h3>
-            <p className="mx-auto mt-3 max-w-[320px] text-[15px] leading-[1.5] text-muted">
-              We&apos;ll be in touch when a suitable opportunity comes up.
-            </p>
-          </motion.div>
+            We&apos;ll be in touch when a suitable opportunity comes up.
+          </FormSuccess>
         ) : (
           <motion.form
             key="form"
-            onSubmit={onSubmit}
             noValidate
             initial={false}
+            onSubmit={handleSubmit}
             aria-label="Get in touch"
             className="flex w-full flex-col gap-4 lg:w-[400px]"
           >
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-6 sm:flex-row">
-                {field("firstName", "First name", "text", "given-name")}
-                {field("lastName", "Last name", "text", "family-name")}
+                {textInput("firstName", "First name", "text", "given-name")}
+                {textInput("lastName", "Last name", "text", "family-name")}
               </div>
               <div className="flex flex-col gap-6 sm:flex-row">
-                {field("email", "Email", "email", "email")}
-                {field("phone", "Phone number", "tel", "tel")}
+                {textInput("email", "Email", "email", "email")}
+                {textInput("phone", "Phone number", "tel", "tel")}
               </div>
             </div>
 
             <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="git-message" className={`mb-0 ${LABEL}`}>
+              <div>
+                <Label htmlFor={id("message")} className={LABEL}>
                   Message
                 </Label>
                 <Textarea
-                  id="git-message"
+                  id={id("message")}
                   name="message"
                   placeholder="Type your message..."
                   value={values.message}
-                  onChange={set("message")}
+                  onChange={update("message")}
                   className="h-[180px] p-3 text-[16px] placeholder:text-ink/60"
                 />
               </div>
 
-              {/* CV upload — same control as the job apply form */}
-              <div className="flex flex-col gap-2">
-                <Label required className={`mb-0 ${LABEL}`}>
-                  Upload your CV (PDF)
-                </Label>
-                <input
-                  ref={fileRef}
-                  id="git-cv"
-                  name="cv"
-                  type="file"
-                  accept="application/pdf"
-                  className="sr-only"
-                  tabIndex={-1}
-                  onChange={(e) => {
-                    const f = e.target.files?.[0] ?? null;
-                    const ok =
-                      !!f && f.type === "application/pdf" && f.size <= MAX_CV_BYTES;
-                    setFile(ok ? f : null);
-                    setErrors((x) => ({ ...x, file: !!f && !ok }));
-                  }}
-                />
-                <button
-                  type="button"
-                  id="git-cvTrigger"
-                  aria-describedby={errors.file ? "git-file-err" : "git-cv-hint"}
-                  onClick={() => fileRef.current?.click()}
-                  className={cn(
-                    "flex w-full items-center justify-center border px-4 py-3 font-display text-[14px] text-ink hover:bg-ink hover:text-paper",
-                    errors.file ? "border-orange" : "border-ink",
-                  )}
-                >
-                  <span className="truncate">{file ? file.name : "Upload"}</span>
-                </button>
-                {errors.file ? (
-                  <p id="git-file-err" className="text-[13px] leading-[1.4] text-ink">
-                    {MESSAGES.file}
-                  </p>
-                ) : (
-                  <p id="git-cv-hint" className="text-[12px] text-muted">
-                    PDF, max 5MB.
-                  </p>
-                )}
-              </div>
+              <CvUpload
+                id={id("cv")}
+                name="cv"
+                label="Upload your CV (PDF)"
+                labelClassName={LABEL}
+                file={cv}
+                error={errors.cv ? MESSAGES.cv : undefined}
+                onChange={(file) => {
+                  setCv(file);
+                  if (file) clearError("cv");
+                }}
+              />
 
               <Button type="submit" size="sm" className="w-full">
                 Get in Touch

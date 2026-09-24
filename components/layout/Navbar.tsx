@@ -3,39 +3,42 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Container } from "./Container";
+import { Container } from "@/components/layout/Container";
+import { CloseIcon, MenuIcon } from "@/components/ui/icons";
+import { EASE_BRAND } from "@/components/ui/motion";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { MenuIcon, CloseIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 
-/**
- * Client feedback (14.08): "Open Positions" and "Careers" led to essentially
- * the same content, so only "Careers" remains — carrying the CTA treatment and
- * pointing at the roles list.
- */
-const LINKS = [{ label: "Careers", href: "/#open-positions" }];
+const NAV_LINKS = [{ label: "Careers", href: "/#open-positions" }] as const;
 
-function LangToggle({ className }: { className?: string }) {
-  const [lang, setLang] = useState<"EN" | "VN">("EN");
+const LANGUAGES = ["EN", "VN"] as const;
+type Language = (typeof LANGUAGES)[number];
+
+/**
+ * EN/VN switch. Presentational for now: the Vietnamese content is not yet
+ * available, so selecting VN only changes the active state.
+ */
+function LanguageToggle() {
+  const [language, setLanguage] = useState<Language>("EN");
+
   return (
     <div
-      className={cn(
-        "inline-flex select-none items-center border border-orange text-[13px] font-display",
-        className,
-      )}
+      role="group"
+      aria-label="Language"
+      className="inline-flex items-center border border-orange font-display text-[13px] select-none"
     >
-      {(["EN", "VN"] as const).map((l) => (
+      {LANGUAGES.map((code) => (
         <button
-          key={l}
+          key={code}
           type="button"
-          onClick={() => setLang(l)}
-          aria-pressed={lang === l}
+          onClick={() => setLanguage(code)}
+          aria-pressed={language === code}
           className={cn(
             "px-3 py-1.5 leading-none transition-colors duration-200",
-            lang === l ? "bg-orange text-paper" : "bg-transparent text-ink",
+            language === code ? "bg-orange text-paper" : "bg-transparent text-ink",
           )}
         >
-          {l}
+          {code}
         </button>
       ))}
     </div>
@@ -43,7 +46,7 @@ function LangToggle({ className }: { className?: string }) {
 }
 
 export function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const reduce = useReducedMotion();
 
@@ -54,94 +57,87 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll while the mobile sheet is open
+  // Prevent the page behind the mobile menu from scrolling.
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [menuOpen]);
 
   return (
     <header
       className={cn(
-        // Figma: 72px tall, 1px bottom border, sits on the page ground.
-        "sticky top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300 ease-[var(--ease-brand)]",
-        scrolled
-          ? "border-b border-ink/10 bg-ground/85 backdrop-blur-md"
-          : "border-b border-ink/10 bg-ground",
+        "sticky top-0 z-50 border-b border-ink/10 transition-[background-color] duration-300 ease-(--ease-brand)",
+        scrolled ? "bg-ground/85 backdrop-blur-md" : "bg-ground",
       )}
     >
-      {/* subtle shrink once you start scrolling */}
       <Container
         className={cn(
           "flex items-center justify-between transition-[height] duration-300 ease-out",
           scrolled ? "h-14 lg:h-[60px]" : "h-16 lg:h-[72px]",
         )}
       >
-        {/* The mark must not move on hover — a logo is a fixed anchor, not a
-            button (feedback 21.08). Colour-only affordance instead. */}
-        <Link
-          href="/"
-          aria-label="Silbloxx Asia home"
-          className="text-ink"
-        >
-          {/* size = mark height (the vector stands 1em tall) */}
+        <Link href="/" aria-label="Silbloxx Asia home" className="text-ink">
           <Wordmark className="text-[16px] lg:text-[19px]" />
         </Link>
 
-        {/* Desktop */}
-        {/* Figma Navbar (node 10219:38689): "Careers" is plain black text
-            beside the EN/VN toggle — not a filled CTA. */}
-        <nav className="hidden items-center gap-7 lg:flex">
-          <Link
-            href="/#open-positions"
-            className="link-underline font-display text-[20px] leading-[1.4] text-ink hover:text-orange"
-          >
-            Careers
-          </Link>
-          <LangToggle />
+        <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="link-underline font-display text-[20px] leading-[1.4] text-ink hover:text-orange"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <LanguageToggle />
         </nav>
 
-        {/* Mobile controls */}
         <div className="flex items-center gap-3 lg:hidden">
-          <LangToggle />
+          <LanguageToggle />
           <button
             type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="grid h-9 w-9 place-items-center text-orange"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+            className="grid size-9 place-items-center text-orange"
           >
-            {open ? <CloseIcon width={26} height={26} /> : <MenuIcon width={26} height={26} />}
+            {menuOpen ? (
+              <CloseIcon width={26} height={26} />
+            ) : (
+              <MenuIcon width={26} height={26} />
+            )}
           </button>
         </div>
       </Container>
 
-      {/* Mobile sheet */}
       <AnimatePresence>
-        {open && (
-          <motion.div
-            key="sheet"
+        {menuOpen && (
+          <motion.nav
+            id="mobile-menu"
+            aria-label="Mobile"
             initial={{ opacity: 0, y: reduce ? 0 : -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: reduce ? 0 : -8 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.28, ease: EASE_BRAND }}
             className="lg:hidden"
           >
-            <Container className="flex flex-col gap-1 border-t border-ink/10 pb-6 pt-2">
-              {LINKS.map((l) => (
+            <Container className="flex flex-col gap-1 border-t border-ink/10 pt-2 pb-6">
+              {NAV_LINKS.map((link) => (
                 <Link
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
                   className="border-b border-ink/10 py-4 font-display text-[22px] text-ink hover:text-orange"
                 >
-                  {l.label}
+                  {link.label}
                 </Link>
               ))}
             </Container>
-          </motion.div>
+          </motion.nav>
         )}
       </AnimatePresence>
     </header>

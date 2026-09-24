@@ -1,42 +1,41 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Gruppo } from "next/font/google";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-/**
- * Fallback display face. The real face is Druk Text Medium, loaded via
- * @font-face in globals.css from /public/fonts. This must NOT claim the
- * `--font-display` variable: next/font sets its variable on <html>, which
- * would override the @theme stack and drop "Druk Text" from the front of it.
- */
-const display = Archivo_Black({
+/** Fallback for the licensed Druk Text display face (see globals.css). */
+const archivo = Archivo_Black({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-archivo",
   display: "swap",
 });
 
-/** Body face — Gruppo Regular (brand secondary, Google Fonts). */
-const body = Gruppo({
+/** Body face. */
+const gruppo = Gruppo({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-gruppo",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://careers.silbloxx.asia"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Silbloxx Asia — Careers",
-    template: "%s — Silbloxx Asia",
+    default: `${SITE_NAME} — Careers`,
+    template: `%s — ${SITE_NAME} Careers`,
   },
-  description:
-    "Silbloxx Asia is the Vietnamese arm of Silbloxx, part of the BRIAM Group. Join us building the new Ho Chi Minh City manufacturing facility.",
+  description: SITE_DESCRIPTION,
   openGraph: {
-    title: "Silbloxx Asia — Careers",
-    description:
-      "Your reliable supplier of innovative silos. Build the new Silbloxx Asia facility in Ho Chi Minh City.",
     type: "website",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Careers`,
+    description: SITE_DESCRIPTION,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f9f9f9",
 };
 
 export default function RootLayout({
@@ -45,11 +44,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} h-full antialiased`}
+      className={`${archivo.variable} ${gruppo.variable} h-full antialiased`}
     >
-      <body className="grain relative min-h-full bg-paper text-ink">
-        {children}
-      </body>
+      <body className="grain relative min-h-full bg-ground text-ink">{children}</body>
     </html>
   );
 }

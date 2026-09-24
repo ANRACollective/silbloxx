@@ -1,22 +1,15 @@
 import { cn } from "@/lib/cn";
 
-/**
- * Page gutter. Figma variable `page-padding/padding-global` = 64px on the
- * 1440 frame; the gutter scales down on smaller breakpoints.
- */
-export function Container({
-  className,
-  children,
-}: {
+type ContainerProps = {
   className?: string;
   children: React.ReactNode;
-}) {
+};
+
+/** Page-width wrapper with the design's side gutters: 20px mobile, 40px tablet, 64px desktop. */
+export function Container({ className, children }: ContainerProps) {
   return (
     <div
-      className={cn(
-        "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-[64px]",
-        className,
-      )}
+      className={cn("mx-auto w-full max-w-[1440px] px-5 sm:px-10 lg:px-16", className)}
     >
       {children}
     </div>

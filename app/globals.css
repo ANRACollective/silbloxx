@@ -1,16 +1,12 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------------------------ *
- *  Display face — Druk Text Medium (licensed, supplied by the client)
- *
- *  This is the cut the Figma specs. Note the live corporate site uses a
- *  different cut — Druk *Wide* Bold — so type sizes don't transfer 1:1
- *  between the two: Druk Text is condensed, Druk Wide is not.
- *
- *  Declared as plain @font-face rather than next/font/local on purpose: a
- *  missing file degrades silently to Archivo Black instead of failing the
- *  build.
- * ------------------------------------------------------------------ */
+/* ==========================================================================
+   Fonts
+   Druk Text Medium is the licensed display face. It is declared with a plain
+   @font-face so that, if the file is ever missing, headings fall back to
+   Archivo Black instead of failing the build. Gruppo (body) and Archivo Black
+   (fallback) are loaded through next/font in app/layout.tsx.
+   ========================================================================== */
 @font-face {
   font-family: "Druk Text";
   src: url("/fonts/DrukText-Medium.woff2") format("woff2");
@@ -19,60 +15,47 @@
   font-display: swap;
 }
 
-/* ------------------------------------------------------------------ *
- *  Silbloxx Asia — Design tokens
- *  Source of truth: Drive › Docs from SD › 03-brand-guidelines.md
- * ------------------------------------------------------------------ */
+/* ==========================================================================
+   Design tokens (Figma variables)
+   ========================================================================== */
 @theme {
-  /* Colour — exact Figma variables (Primitives + Semantics)
-     White #FFFFFF · Yellow #FFDC00 · Orange #FF2E00 · Grey #DAD9D6 · Black #000000 */
-  --color-paper: #ffffff; /* Surface / OnPrimary / TextInverse */
-  --color-ink: #000000; /* Black — TextPrimary, Border, wordmark */
-  --color-graybrand: #dad9d6; /* Grey — Disabled, quiet surfaces, dividers */
-  --color-yellow: #ffdc00; /* Yellow — Accent, radial wash, highlights */
-  --color-yellow-soft: rgba(255, 220, 0, 0.2); /* Tag fill — 20% yellow (Figma) */
-  --color-orange: #ff2e00; /* Orange — Primary CTAs, inline links, accents */
-  --color-muted: #000000; /* Body copy is TextPrimary black in the design */
+  /* Colour */
+  --color-paper: #ffffff; /* Surface, text on primary */
+  --color-ink: #000000; /* Text, borders, wordmark */
+  --color-muted: #000000; /* Secondary text (black in the current design) */
+  --color-graybrand: #dad9d6; /* Disabled controls */
+  --color-yellow: #ffdc00; /* Accent, highlights */
+  --color-yellow-soft: rgb(255 220 0 / 0.2); /* Tag fill */
+  --color-orange: #ff2e00; /* Primary actions, inline links */
+  --color-ground: #f9f9f9; /* Page background (see .grain) */
 
-  /* Page ground. Measured off the Figma frame export: the modal pixel value of
-     every blank area on the page is 249 (#F9F9F9), not white — the frame carries
-     a noise fill that the properties panel doesn't surface. */
-  --color-ground: #f9f9f9;
-
-  /* Type — licensed Druk Text Medium first (see @font-face above), falling
-     back to Archivo Black if the .woff2 is ever missing. */
-  --font-display: "Druk Text", var(--font-archivo), "Archivo Black",
-    system-ui, sans-serif;
-  --font-body: var(--font-body), "Gruppo", system-ui, sans-serif;
-
-  /* Spacing tokens — Figma variables */
-  --spacing-page: 64px; /* page-padding/padding-global */
-  --spacing-section-md: 80px; /* section-padding/padding-section-medium */
-  --spacing-section-lg: 112px; /* section-padding/padding-section-large */
-
-  /* stroke/border-width — the design's heavy 4px rule */
-  --stroke-brand: 4px;
-
-  /* Square by default */
-  --radius-brand: 0px;
+  /* Type */
+  --font-display:
+    "Druk Text", var(--font-archivo), "Archivo Black", system-ui, sans-serif;
+  --font-body: var(--font-gruppo), "Gruppo", system-ui, sans-serif;
 
   /* Motion */
   --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ------------------------------------------------------------------ *
- *  Base
- * ------------------------------------------------------------------ */
+/* ==========================================================================
+   Base
+   ========================================================================== */
 @layer base {
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
 
+  /*
+   * Body copy is set bold to match silbloxx.com. Gruppo ships in a single 400
+   * weight, so browsers synthesise the bold there and here alike.
+   */
   body {
     background-color: var(--color-ground);
     color: var(--color-ink);
     font-family: var(--font-body);
+    font-weight: 700;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -82,14 +65,23 @@
     color: var(--color-paper);
   }
 
+  /* Druk Text is a single 500 weight; never let it inherit the bold body. */
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  .font-display {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.2;
-    letter-spacing: 0; /* Figma: letterSpacing 0 on every heading style */
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
   }
 
   a {
@@ -101,6 +93,7 @@
     html {
       scroll-behavior: auto;
     }
+
     *,
     *::before,
     *::after {
@@ -111,10 +104,9 @@
   }
 }
 
-/* ------------------------------------------------------------------ *
- *  Type scale — Drive › Docs from SD typography sheet
- *  (mobile base → desktop at lg / 1024px). Display = Druk Text / Archivo Black.
- * ------------------------------------------------------------------ */
+/* ==========================================================================
+   Type scale (mobile first, desktop from 1024px)
+   ========================================================================== */
 @layer components {
   .h1,
   .h2,
@@ -123,86 +115,80 @@
   .h5,
   .h6 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0; /* Figma: letterSpacing 0 */
+    font-weight: 500;
+    letter-spacing: 0;
+    text-wrap: balance;
   }
-  /* Figma scale, kept as specced. The "text looks huge" note (21.08) was the
-     Archivo Black stand-in, not the sizes — Druk Text is condensed, so 56px
-     in the real face is far tighter than 56px in the fallback. Verified by
-     rendering both side by side before deciding. */
+
   .h1 {
-    font-size: 2.5rem;
+    font-size: 2.5rem; /* 40 → 56 */
     line-height: 1.2;
-  } /* 40 → 56 */
+  }
+
   .h2 {
-    font-size: 2.25rem;
+    font-size: 2.25rem; /* 36 → 48 */
     line-height: 1.3;
-  } /* 36 → 48 */
+  }
+
   .h3 {
-    font-size: 2rem;
+    font-size: 2rem; /* 32 → 40 */
     line-height: 1.3;
-  } /* 32 → 40 */
+  }
+
   .h4 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* 24 → 32 */
     line-height: 1.4;
-  } /* 24 → 32 */
+  }
+
   .h5 {
-    font-size: 1.25rem;
+    font-size: 1.25rem; /* 20 → 24 */
     line-height: 1.4;
-  } /* 20 → 24 */
+  }
+
   .h6 {
-    font-size: 1.125rem;
+    font-size: 1.125rem; /* 18 → 20 */
     line-height: 1.4;
-  } /* 18 → 20 */
+  }
 
   @media (min-width: 1024px) {
     .h1 {
       font-size: 3.5rem;
     }
+
     .h2 {
       font-size: 3rem;
       line-height: 1.2;
     }
+
     .h3 {
       font-size: 2.5rem;
       line-height: 1.2;
     }
+
     .h4 {
       font-size: 2rem;
       line-height: 1.3;
     }
+
     .h5 {
       font-size: 1.5rem;
     }
+
     .h6 {
       font-size: 1.25rem;
     }
   }
-
-  /* Small display label (e.g. "About Us", column headings) */
-  .eyebrow {
-    font-family: var(--font-display);
-    font-size: 0.8125rem;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-  }
 }
 
-/* ------------------------------------------------------------------ *
- *  Brand utilities
- * ------------------------------------------------------------------ */
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
 @layer utilities {
-  /* Page ground — the Figma frame's noise fill, reproduced.
-   *
-   * Measured from the lossless 1440x4412 frame export: every blank area has a
-   * modal pixel value of 249 (#F9F9F9) with independent per-channel grain,
-   * sigma ~2.5, spanning roughly 242-253. It is 1px grain with no structure —
-   * no grid, no dots (verified by amplifying a flat patch 25x).
-   *
-   * feTurbulence gives per-channel independent noise for free; feComponentTransfer
-   * then compresses its 0-1 output into that narrow band around 249, so the layer
-   * is opaque and needs no blending. It sits behind content (z-index 0), which
-   * keeps photographs clean — the grain is on the page, not over the imagery.
+  /*
+   * Page background: the design's fine noise texture around #F9F9F9.
+   * An SVG turbulence filter generates independent per-channel grain, and the
+   * component transfer compresses it into a narrow, fully opaque band. The layer
+   * sits behind all content, so photography stays untouched.
    */
   .grain::before {
     content: "";
@@ -215,46 +201,33 @@
     background-repeat: repeat;
   }
 
-  /* Keep real content above the background layers */
   .grain > * {
     position: relative;
     z-index: 1;
   }
 
-  /* Link underline — shown on hover/focus with no animation (review 16.09:
-     hover animation is reserved for Apply Now). Hover only applies on
-     pointers that can hover, so touch devices never get a stuck state. */
+  /* Underline on hover (pointer devices only) and on keyboard focus. */
   .link-underline {
     text-decoration: none;
     text-underline-offset: 3px;
   }
+
   .link-underline:focus-visible {
     text-decoration: underline;
   }
+
   @media (hover: hover) {
     .link-underline:hover {
       text-decoration: underline;
     }
   }
 
-  /* Readability (review 16.09): balance headline lines, and stop body copy
-     leaving a single word stranded on its last line. */
-  h1, h2, h3, h4, .h1, .h4, .h5 {
-    text-wrap: balance;
-  }
-  p, li, dd {
-    text-wrap: pretty;
-  }
-
-  /* One colour grade on every photo (review 16.09: "standardised visual
-     styling across images"). The shoots come from different sources —
-     studio, drone, site at dusk — so a light, shared grade pulls them into a
-     set: slightly lower saturation, a touch more contrast, no hue shift. */
+  /* Shared colour grade that unifies photography from different sources. */
   .photo-grade {
     filter: saturate(0.88) contrast(1.06) brightness(1.01);
   }
 
-  /* Yellow radial wash used behind hero / footer lockups */
+  /* Yellow radial wash rising from the bottom of the footer. */
   .wash-yellow {
     background-image: radial-gradient(
       120% 90% at 50% 120%,

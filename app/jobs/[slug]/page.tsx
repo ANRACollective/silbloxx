@@ -1,33 +1,33 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
 import { JobDetail } from "@/components/sections/JobDetail";
-import { JOBS, getJob } from "@/lib/jobs";
+import { getJob, JOBS } from "@/lib/jobs";
+
+type JobPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return JOBS.map((j) => ({ slug: j.slug }));
+  return JOBS.map((job) => ({ slug: job.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: JobPageProps): Promise<Metadata> {
   const { slug } = await params;
   const job = getJob(slug);
-  if (!job) return { title: "Role not found" };
+  if (!job) return {};
+
   return {
-    title: `${job.title} — Careers`,
+    title: job.title,
     description: job.intro,
+    alternates: { canonical: `/jobs/${job.slug}` },
   };
 }
 
-export default async function JobPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function JobPage({ params }: JobPageProps) {
   const { slug } = await params;
   const job = getJob(slug);
   if (!job) notFound();

@@ -3,13 +3,9 @@ import { cn } from "@/lib/cn";
 export type BracketCorner = "tl" | "tr" | "bl" | "br";
 
 /**
- * The brand's L-bracket accent, taken from the Figma vector
- * (`public/brand/bracket.svg`, node `_Element`).
- *
- * The path is an 80x80 solid L whose arm thickness is 24.67 — noticeably
- * chunkier than a hairline rule. Drawn as `bl` (bottom-left) in the source;
- * the other corners are the same path mirrored, which is exactly how the
- * design does it (the hero's second bracket is the same node rotated 180deg).
+ * The brand's L-bracket accent (`public/brand/bracket.svg`): an 80×80 solid L
+ * with an arm thickness of 24.67. The artwork is drawn as the bottom-left
+ * corner; the other corners are the same path rotated.
  */
 const ROTATION: Record<BracketCorner, string> = {
   bl: "rotate(0deg)",
